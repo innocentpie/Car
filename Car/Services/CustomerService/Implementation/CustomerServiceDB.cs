@@ -29,7 +29,7 @@ namespace Car.Services.Implementation.DB
 
         public async Task<Customer> Get(Guid id)
         {
-            var customer = await _context.Customers.FirstAsync(x => x.Id == id);
+            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
             return customer;
         }
 

@@ -15,7 +15,7 @@ namespace Car.Services.Implementation.DB
 
         public async Task Add(Work work)
         {
-            await _context.Works.AddAsync(work);
+            _context.Entry(work).State = EntityState.Added;
             await _context.SaveChangesAsync();
             _context.Entry(work).State = EntityState.Detached;
         }
@@ -29,7 +29,7 @@ namespace Car.Services.Implementation.DB
 
         public async Task<Work> Get(Guid id)
         {
-            var work = await _context.Works.FirstAsync(x => x.Id == id);
+            var work = await _context.Works.FirstOrDefaultAsync(x => x.Id == id);
             return work;
         }
 

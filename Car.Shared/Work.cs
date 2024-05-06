@@ -9,8 +9,9 @@ namespace Car.Shared
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [ForeignKey(nameof(Customer.Id))]
+        [ForeignKey(nameof(Customer))]
         public Guid CustomerId { get; set; }
+        public virtual Customer? Customer { get; set; }
 
         [Required]
         [RegularExpression("^[A-Z]{3}-[1-9]{3}$")]
