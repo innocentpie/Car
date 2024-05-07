@@ -1,3 +1,5 @@
+using Car.UI.Services;
+using Car.UI.Services.Implementation;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -11,7 +13,10 @@ namespace Car.UI
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:8080") });
+
+            builder.Services.AddScoped<ICustomerService, CustomerServiceWebApi>();
+            builder.Services.AddScoped<IWorkService, WorkServiceWebApi>();
 
             await builder.Build().RunAsync();
         }

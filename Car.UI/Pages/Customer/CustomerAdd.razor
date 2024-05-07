@@ -2,6 +2,9 @@
 
 @using Car.Shared
 @using Car.UI.Components
+@using Car.UI.Services
+@inject ICustomerService CustomerService;
+@inject NavigationManager NavigationManager
 
 <h3>CustomerAdd</h3>
 
@@ -12,6 +15,7 @@
 
 	private async Task AddCustomerAsync()
 	{
-		
+		await CustomerService.AddCustomerAsync(Customer);
+		NavigationManager.NavigateTo("/customer/list");
 	}
 }
