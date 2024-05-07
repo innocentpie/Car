@@ -1,0 +1,17 @@
+﻿@page "/customer/add"
+
+@using Car.Shared
+@using Car.UI.Components
+
+<h3>CustomerAdd</h3>
+
+<CustomerForm Customer="Customer" OnValidSubmit="AddCustomerAsync" ButtonText="Add Customer"/>
+
+@code {
+	private Customer Customer { get; set; } = new();
+
+	private async Task AddCustomerAsync()
+	{
+		
+	}
+}
