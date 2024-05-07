@@ -36,7 +36,9 @@ namespace Car
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+			app.UseCors(o => o.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
+			app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
