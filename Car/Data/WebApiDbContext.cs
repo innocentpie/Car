@@ -15,8 +15,8 @@ namespace Car.Data
         {
             modelBuilder.Entity<Work>()
                 .HasOne<Customer>()
-                .WithOne()
-                .HasForeignKey<Work>(x => x.CustomerId);
+                .WithMany()
+                .HasForeignKey(x => x.CustomerId);
         }
     }
 }
