@@ -52,7 +52,8 @@ namespace Car.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Works_CustomerId",
                 table: "Works",
-                column: "CustomerId");
+                column: "CustomerId",
+                unique: true);
         }
 
         /// <inheritdoc />
