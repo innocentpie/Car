@@ -15,21 +15,20 @@ namespace Car.Services.Implementation.DB
 
         public async Task Add(Work work)
         {
-            _context.Entry(work).State = EntityState.Added;
+            await _context.Works.AddAsync(work);
             await _context.SaveChangesAsync();
-            _context.Entry(work).State = EntityState.Detached;
         }
 
         public async Task Delete(Guid id)
         {
-            await _context.Works
-                .Where(x => x.Id == id)
-                .ExecuteDeleteAsync();
+            var work = await Get(id);
+            _context.Works.Remove(work);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Work> Get(Guid id)
         {
-            var work = await _context.Works.FirstOrDefaultAsync(x => x.Id == id);
+            var work = await _context.Works.FindAsync(id);
             return work;
         }
 
@@ -38,19 +37,19 @@ namespace Car.Services.Implementation.DB
             return await _context.Works.ToListAsync();
         }
 
-        public async Task Update(Work work)
+        public async Task Update(Work newWork)
         {
-            await _context.Works
-                .Where(x => x.Id == work.Id)
-                .ExecuteUpdateAsync(s =>
-                    s.SetProperty(x => x.CustomerId, work.CustomerId)
-                    .SetProperty(x => x.LicensePlate, work.LicensePlate)
-                    .SetProperty(x => x.ManufacturingDate, work.ManufacturingDate)
-                    .SetProperty(x => x.Category, work.Category)
-                    .SetProperty(x => x.Description, work.Description)
-                    .SetProperty(x => x.Severity, work.Severity)
-                    .SetProperty(x => x.Status, work.Status)
-            );
+            var x = await Get(newWork.Id);
+
+            x.CustomerId = newWork.CustomerId;
+            x.LicensePlate = newWork.LicensePlate;
+            x.ManufacturingDate = newWork.ManufacturingDate;
+            x.Category = newWork.Category;
+            x.Description = newWork.Description;
+            x.Severity = newWork.Severity;
+            x.Status = newWork.Status;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

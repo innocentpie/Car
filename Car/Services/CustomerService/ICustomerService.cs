@@ -13,6 +13,6 @@ namespace Car.Services
 
         Task<List<Customer>> GetAll();
 
-        Task Update(Customer customer);
+        Task Update(Customer newCustomer);
     }
 }

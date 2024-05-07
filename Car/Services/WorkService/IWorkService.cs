@@ -12,6 +12,6 @@ namespace Car.Services
 
         Task<List<Work>> GetAll();
 
-        Task Update(Work work);
+        Task Update(Work newWork);
     }
 }

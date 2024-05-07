@@ -21,7 +21,6 @@ namespace Car
             builder.Services.AddDbContext<WebApiDbContext>(options =>
             {
                 options.UseSqlite(builder.Configuration.GetConnectionString("SQLite"));
-                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 options.UseLazyLoadingProxies();
             }, ServiceLifetime.Singleton);
 

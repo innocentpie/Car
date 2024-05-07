@@ -17,19 +17,18 @@ namespace Car.Services.Implementation.DB
         {
             await _context.Customers.AddAsync(customer);
             await _context.SaveChangesAsync();
-            _context.Entry(customer).State = EntityState.Detached;
         }
 
         public async Task Delete(Guid id)
         {
-            await _context.Customers
-                .Where(x => x.Id == id)
-                .ExecuteDeleteAsync();
+            var customer = await Get(id);
+            _context.Customers.Remove(customer);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Customer> Get(Guid id)
         {
-            var customer = await _context.Customers.FirstOrDefaultAsync(x => x.Id == id);
+            var customer = await _context.Customers.FindAsync(id);
             return customer;
         }
 
@@ -38,16 +37,15 @@ namespace Car.Services.Implementation.DB
             return await _context.Customers.ToListAsync();
         }
 
-        public async Task Update(Customer customer)
+        public async Task Update(Customer newCustomer)
         {
-            await _context.Customers
-                .Where(x => x.Id == customer.Id)
-                .ExecuteUpdateAsync(s =>
-                    s.SetProperty(x => x.Name, customer.Name)
-                    .SetProperty(x => x.Address, customer.Address)
-                    .SetProperty(x => x.Address, customer.Address)
-                    .SetProperty(x => x.Email, customer.Email)
-            );
+            var customer = await Get(newCustomer.Id);
+
+            customer.Name = newCustomer.Name;
+            customer.Email = newCustomer.Email;
+            customer.Address = newCustomer.Address;
+
+            await _context.SaveChangesAsync();
         }
     }
 }
