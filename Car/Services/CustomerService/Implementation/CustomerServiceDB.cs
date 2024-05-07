@@ -6,9 +6,9 @@ namespace Car.Services.Implementation.DB
 {
     public class CustomerServiceDB : ICustomerService
     {
-        private readonly DataContext _context;
+        private readonly WebApiDbContext _context;
 
-        public CustomerServiceDB(DataContext context)
+        public CustomerServiceDB(WebApiDbContext context)
         {
             _context = context;
         }

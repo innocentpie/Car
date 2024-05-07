@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Car.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(WebApiDbContext))]
     partial class WebApiDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -18,7 +18,7 @@ namespace Car
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDbContext<DataContext>(options =>
+            builder.Services.AddDbContext<WebApiDbContext>(options =>
             {
                 options.UseSqlite(builder.Configuration.GetConnectionString("SQLite"));
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);

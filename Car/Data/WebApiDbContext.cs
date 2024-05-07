@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Car.Data
 {
-    public class DataContext : DbContext
+    public class WebApiDbContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options)
+        public WebApiDbContext(DbContextOptions<WebApiDbContext> options)
             : base(options) { }
 
         public virtual DbSet<Customer> Customers { get; set; }

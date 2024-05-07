@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Car.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(WebApiDbContext))]
     [Migration("20240507123525_Initial")]
     partial class Initial
     {

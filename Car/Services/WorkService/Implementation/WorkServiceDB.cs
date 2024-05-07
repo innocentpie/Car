@@ -6,9 +6,9 @@ namespace Car.Services.Implementation.DB
 {
     public class WorkServiceDB : IWorkService
     {
-        private readonly DataContext _context;
+        private readonly WebApiDbContext _context;
 
-        public WorkServiceDB(DataContext context)
+        public WorkServiceDB(WebApiDbContext context)
         {
             _context = context;
         }
