@@ -1,14 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Car.Shared
 {
-    public class Customer
+    public class CustomerPropertiesDTO
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-
         [Required(AllowEmptyStrings = false)]
         [MaxLength(100)]
         public string Name { get; set; }
@@ -21,7 +16,5 @@ namespace Car.Shared
         [EmailAddress]
         [MaxLength(100)]
         public string Email { get; set; }
-
-
     }
 }

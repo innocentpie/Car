@@ -1,4 +1,5 @@
 ﻿@page "/customer/{id:guid}"
+
 @using Car.Shared
 @using Car.UI.Components
 @using Car.UI.Services
@@ -11,7 +12,7 @@
 }
 else
 {
-    <CustomerForm Customer="Customer" OnValidSubmit="UpdateAsync" ButtonText="Update Customer" />
+    <CustomerForm Customer="Customer.Properties" OnValidSubmit="UpdateAsync" ButtonText="Update Customer" />
     <button class="btn btn-warning" @onclick="DeleteAsync">Delete</button>
 }
 
@@ -20,7 +21,7 @@ else
     [Parameter]
     public Guid Id { get; set; }
     
-    private Customer? Customer { get; set; }
+    private CustomerGetUpdateDTO? Customer { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

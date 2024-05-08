@@ -1,0 +1,13 @@
+﻿@page "/work/add"
+
+@using Car.Shared
+@using Car.UI.Components
+@using Car.UI.Services
+@inject IWorkService WorkService;
+@inject NavigationManager NavigationManager
+
+<h3>WorkAdd</h3>
+
+@code {
+	private WorkPropertiesDTO Work { get; set; }
+}

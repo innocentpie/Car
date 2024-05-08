@@ -17,21 +17,16 @@ namespace Car.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Work work)
+        public async Task<IActionResult> Add([FromBody] WorkPropertiesDTO work)
         {
-            Work existingWork = await _workService.Get(work.Id);
-            if (existingWork != null)
-                return Conflict();
-
             await _workService.Add(work);
-
             return Ok();
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            Work work = await _workService.Get(id);
+            WorkGetUpdateDTO? work = await _workService.Get(id);
 
             if (work is null)
             {
@@ -44,9 +39,9 @@ namespace Car.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<Work>> Get(Guid id)
+        public async Task<ActionResult<WorkGetUpdateDTO>> Get(Guid id)
         {
-            Work work = await _workService.Get(id);
+            WorkGetUpdateDTO? work = await _workService.Get(id);
 
             if (work is null)
             {
@@ -57,13 +52,19 @@ namespace Car.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Work>>> GetAll()
+        public async Task<ActionResult<List<WorkGetUpdateDTO>>> GetAll()
         {
             return Ok(await _workService.GetAll());
         }
 
+        [HttpGet("inclcustomer")]
+        public async Task<ActionResult<List<WorkGetIncludeCustomerDTO>>> GetAllIncludeCustomer()
+        {
+            return Ok(await _workService.GetAllIncludeCustomer());
+        }
+
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] Work newWork)
+        public async Task<IActionResult> Update(Guid id, [FromBody] WorkGetUpdateDTO newWork)
         {
             if (id != newWork.Id)
             {

@@ -12,7 +12,7 @@ namespace Car.UI.Services.Implementation
             _httpClient = httpClient;
         }
 
-        public async Task AddCustomerAsync(Customer customer)
+        public async Task AddCustomerAsync(CustomerPropertiesDTO customer)
 		{
 			await _httpClient.PostAsJsonAsync("/api/Customers", customer);
 		}
@@ -22,17 +22,17 @@ namespace Car.UI.Services.Implementation
 			await _httpClient.DeleteAsync($"/api/Customers/{id}");
 		}
 
-		public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
+		public async Task<IEnumerable<CustomerGetUpdateDTO>> GetAllCustomersAsync()
 		{
-			return await _httpClient.GetFromJsonAsync<IEnumerable<Customer>>("/api/Customers");
+			return await _httpClient.GetFromJsonAsync<IEnumerable<CustomerGetUpdateDTO>>("/api/Customers");
 		}
 
-		public async Task<Customer> GetCustomerAsync(Guid id)
+		public async Task<CustomerGetUpdateDTO> GetCustomerAsync(Guid id)
 		{
-			return await _httpClient.GetFromJsonAsync<Customer>($"/api/Customers/{id}");
+			return await _httpClient.GetFromJsonAsync<CustomerGetUpdateDTO>($"/api/Customers/{id}");
 		}
 
-		public async Task UpdateCustomerAsync(Customer customer)
+		public async Task UpdateCustomerAsync(CustomerGetUpdateDTO customer)
 		{
 			await _httpClient.PutAsJsonAsync($"/api/Customers/{customer.Id}", customer);
 		}

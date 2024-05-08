@@ -17,12 +17,8 @@ namespace Car.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Customer customer)
+        public async Task<IActionResult> Add([FromBody] CustomerPropertiesDTO customer)
         {
-            Customer existingCustomer = await _customerService.Get(customer.Id);
-            if(existingCustomer != null) 
-                return Conflict();
-
             await _customerService.Add(customer);
 
             return Ok();
@@ -31,7 +27,7 @@ namespace Car.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            Customer customer = await _customerService.Get(id);
+            CustomerGetUpdateDTO? customer = await _customerService.Get(id);
 
             if (customer is null)
             {
@@ -44,9 +40,9 @@ namespace Car.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<Customer>> Get(Guid id)
+        public async Task<ActionResult<CustomerGetUpdateDTO>> Get(Guid id)
         {
-            Customer customer = await _customerService.Get(id);
+            CustomerGetUpdateDTO customer = await _customerService.Get(id);
 
             if (customer is null)
             {
@@ -57,13 +53,13 @@ namespace Car.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Customer>>> GetAll()
+        public async Task<ActionResult<List<CustomerGetUpdateDTO>>> GetAll()
         {
             return Ok(await _customerService.GetAll());
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] Customer newCustomer)
+        public async Task<IActionResult> Update(Guid id, [FromBody] CustomerGetUpdateDTO newCustomer)
         {
             if (id != newCustomer.Id)
             {

@@ -4,14 +4,16 @@ namespace Car.Services
 {
     public interface IWorkService
     {
-        Task Add(Work work);
+        Task Add(WorkPropertiesDTO newWork);
 
         Task Delete(Guid id);
 
-        Task<Work> Get(Guid id);
+        Task<WorkGetUpdateDTO?> Get(Guid id);
 
-        Task<List<Work>> GetAll();
+        Task<List<WorkGetUpdateDTO>> GetAll();
 
-        Task Update(Work newWork);
+        Task<List<WorkGetIncludeCustomerDTO>> GetAllIncludeCustomer();
+
+        Task Update(WorkGetUpdateDTO newWork);
     }
 }

@@ -5,14 +5,14 @@ namespace Car.UI.Services
 {
 	public interface ICustomerService
 	{
-		Task<IEnumerable<Customer>> GetAllCustomersAsync();
+		Task<IEnumerable<CustomerGetUpdateDTO>> GetAllCustomersAsync();
 
-		Task<Customer> GetCustomerAsync(Guid id);
+		Task<CustomerGetUpdateDTO> GetCustomerAsync(Guid id);
 
 		Task DeleteCustomerAsync(Guid id);
 
-		Task AddCustomerAsync(Customer customer);
+		Task AddCustomerAsync(CustomerPropertiesDTO customer);
 
-		Task UpdateCustomerAsync(Customer customer);
+		Task UpdateCustomerAsync(CustomerGetUpdateDTO customer);
 	}
 }

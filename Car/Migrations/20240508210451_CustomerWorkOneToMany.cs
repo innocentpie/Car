@@ -5,7 +5,7 @@
 namespace Car.Migrations
 {
     /// <inheritdoc />
-    public partial class Customer_Work_One_to_Many : Migration
+    public partial class CustomerWorkOneToMany : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

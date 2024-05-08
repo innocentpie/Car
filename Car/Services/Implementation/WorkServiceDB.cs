@@ -1,4 +1,5 @@
 ﻿using Car.Data;
+using Car.Mappers;
 using Car.Shared;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,43 +14,57 @@ namespace Car.Services.Implementation.DB
             _context = context;
         }
 
-        public async Task Add(Work work)
+        public async Task Add(WorkPropertiesDTO newWork)
         {
+            Work work = newWork.MapToNewWork();
             await _context.Works.AddAsync(work);
             await _context.SaveChangesAsync();
         }
 
         public async Task Delete(Guid id)
         {
-            var work = await Get(id);
+            Work? work = await GetWorkAsync(id);
             _context.Works.Remove(work);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Work> Get(Guid id)
+        public async Task<WorkGetUpdateDTO?> Get(Guid id)
         {
-            var work = await _context.Works.FindAsync(id);
-            return work;
+            Work? work = await GetWorkAsync(id);
+            WorkGetUpdateDTO? dto = work?.MapToWorkGetUpdateDTO();
+            return dto;
         }
 
-        public async Task<List<Work>> GetAll()
+        public async Task<List<WorkGetUpdateDTO>> GetAll()
         {
-            return await _context.Works.ToListAsync();
+            var result = await _context.Works
+                .Select(x => x.MapToWorkGetUpdateDTO())
+                .ToListAsync();
+
+            return result;
         }
 
-        public async Task Update(Work newWork)
+        public async Task<List<WorkGetIncludeCustomerDTO>> GetAllIncludeCustomer()
         {
-            var x = await Get(newWork.Id);
+            var result = await _context.Works
+                .Include(x => x.Customer)
+                .Select(x => x.MapToWorkIncludingCustomerDTO())
+                .ToListAsync();
 
-            x.CustomerId = newWork.CustomerId;
-            x.LicensePlate = newWork.LicensePlate;
-            x.ManufacturingDate = newWork.ManufacturingDate;
-            x.Category = newWork.Category;
-            x.Description = newWork.Description;
-            x.Severity = newWork.Severity;
-            x.Status = newWork.Status;
+            return result;
+        }
 
+        public async Task Update(WorkGetUpdateDTO newWork)
+        {
+            Work? work = await GetWorkAsync(newWork.Id);
+            newWork.MapIntoWork(work);
             await _context.SaveChangesAsync();
+        }
+
+
+        private async Task<Work?> GetWorkAsync(Guid id)
+        {
+            return await _context.Works.FindAsync(id);
         }
     }
 }

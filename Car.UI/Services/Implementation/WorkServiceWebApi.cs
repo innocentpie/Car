@@ -12,7 +12,7 @@ namespace Car.UI.Services.Implementation
 			_httpClient = httpClient;
 		}
 
-		public async Task AddWorkAsync(Work work)
+		public async Task AddWorkAsync(WorkPropertiesDTO work)
 		{
 			await _httpClient.PostAsJsonAsync("/api/Works", work);
 		}
@@ -22,17 +22,22 @@ namespace Car.UI.Services.Implementation
 			await _httpClient.DeleteAsync($"/api/Works/{id}");
 		}
 
-		public async Task<IEnumerable<Work>> GetAllWorksAsync()
+		public async Task<IEnumerable<WorkGetUpdateDTO>> GetAllWorksAsync()
 		{
-			return await _httpClient.GetFromJsonAsync<IEnumerable<Work>>("/api/Works");
+			return await _httpClient.GetFromJsonAsync<IEnumerable<WorkGetUpdateDTO>>("/api/Works");
 		}
 
-		public async Task<Work> GetWorkAsync(Guid id)
+        public async Task<IEnumerable<WorkGetIncludeCustomerDTO>> GetAllWorksIncludeCustomerAsync()
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<WorkGetIncludeCustomerDTO>>("/api/Works/inclcustomer");
+        }
+
+        public async Task<WorkGetUpdateDTO> GetWorkAsync(Guid id)
 		{
-			return await _httpClient.GetFromJsonAsync<Work>($"/api/Works/{id}");
+			return await _httpClient.GetFromJsonAsync<WorkGetUpdateDTO>($"/api/Works/{id}");
 		}
 
-		public async Task UpdateWorkAsync(Work work)
+		public async Task UpdateWorkAsync(WorkGetUpdateDTO work)
 		{
 			await _httpClient.PutAsJsonAsync($"/api/Works/{work.Id}", work);
 		}

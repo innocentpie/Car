@@ -11,7 +11,7 @@
 <CustomerForm Customer="Customer" OnValidSubmit="AddCustomerAsync" ButtonText="Add Customer"/>
 
 @code {
-	private Customer Customer { get; set; } = new();
+	private CustomerPropertiesDTO Customer { get; set; } = new();
 
 	private async Task AddCustomerAsync()
 	{

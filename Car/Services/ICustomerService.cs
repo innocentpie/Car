@@ -5,14 +5,14 @@ namespace Car.Services
 {
     public interface ICustomerService
     {
-        Task Add(Customer customer);
+        Task Add(CustomerPropertiesDTO newCustomer);
 
         Task Delete(Guid id);
 
-        Task<Customer> Get(Guid id);
+        Task<CustomerGetUpdateDTO?> Get(Guid id);
 
-        Task<List<Customer>> GetAll();
+        Task<List<CustomerGetUpdateDTO>> GetAll();
 
-        Task Update(Customer newCustomer);
+        Task Update(CustomerGetUpdateDTO newCustomer);
     }
 }

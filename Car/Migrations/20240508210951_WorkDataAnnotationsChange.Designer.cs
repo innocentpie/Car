@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Car.Migrations
 {
     [DbContext(typeof(WebApiDbContext))]
-    [Migration("20240507130125_Customer_Work_One_to_Many")]
-    partial class Customer_Work_One_to_Many
+    [Migration("20240508210951_WorkDataAnnotationsChange")]
+    partial class WorkDataAnnotationsChange
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace Car.Migrations
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true);
 
-            modelBuilder.Entity("Car.Shared.Customer", b =>
+            modelBuilder.Entity("Car.Customer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,7 +50,7 @@ namespace Car.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("Car.Shared.Work", b =>
+            modelBuilder.Entity("Car.Work", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,7 +64,7 @@ namespace Car.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
+                        .HasMaxLength(10000)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LicensePlate")
@@ -87,13 +87,15 @@ namespace Car.Migrations
                     b.ToTable("Works");
                 });
 
-            modelBuilder.Entity("Car.Shared.Work", b =>
+            modelBuilder.Entity("Car.Work", b =>
                 {
-                    b.HasOne("Car.Shared.Customer", null)
+                    b.HasOne("Car.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Customer");
                 });
 #pragma warning restore 612, 618
         }
