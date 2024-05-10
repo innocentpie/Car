@@ -22,6 +22,6 @@ namespace Car
         [MaxLength(100)]
         public string Email { get; set; }
 
-
+        public virtual ICollection<Work> Works { get; set; }
     }
 }
