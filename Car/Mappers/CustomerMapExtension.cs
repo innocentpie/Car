@@ -4,6 +4,17 @@ namespace Car.Mappers
 {
     public static class CustomerMapExtension
     {
+        public static CustomerGetIncludeWorksDTO MapToCustomerGetIncludeWorksDTO(this Customer customer)
+        {
+            return new CustomerGetIncludeWorksDTO()
+            {
+                Customer = customer.MapToCustomerGetUpdateDTO(),
+                Works = customer.Works
+                    .Select(x => x.MapToWorkGetUpdateDTO())
+                    .ToList(),
+            };
+        }
+
         public static CustomerPropertiesDTO MapToCustomerPropertiesDTO(this Customer customer)
         {
             return new CustomerPropertiesDTO()

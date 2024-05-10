@@ -4,7 +4,7 @@ namespace Car.Mappers
 {
     public static class WorkMapExtension
     {
-        public static WorkGetIncludeCustomerDTO MapToWorkIncludingCustomerDTO(this Work work)
+        public static WorkGetIncludeCustomerDTO MapToWorkGetIncludeCustomerDTO(this Work work)
         {
             return new WorkGetIncludeCustomerDTO()
             {

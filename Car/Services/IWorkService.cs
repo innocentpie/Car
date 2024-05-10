@@ -10,6 +10,8 @@ namespace Car.Services
 
         Task<WorkGetUpdateDTO?> Get(Guid id);
 
+        Task<WorkGetIncludeCustomerDTO?> GetIncludeCustomer(Guid id);
+
         Task<List<WorkGetUpdateDTO>> GetAll();
 
         Task<List<WorkGetIncludeCustomerDTO>> GetAllIncludeCustomer();

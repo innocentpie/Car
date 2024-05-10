@@ -23,16 +23,24 @@ namespace Car.Services.Implementation.DB
 
         public async Task Delete(Guid id)
         {
-            Work? work = await GetWorkAsync(id);
+            Work? work = await _context.Works.FindAsync(id);
             _context.Works.Remove(work);
             await _context.SaveChangesAsync();
         }
 
         public async Task<WorkGetUpdateDTO?> Get(Guid id)
         {
-            Work? work = await GetWorkAsync(id);
+            Work? work = await _context.Works.FindAsync(id);
             WorkGetUpdateDTO? dto = work?.MapToWorkGetUpdateDTO();
             return dto;
+        }
+
+        public async Task<WorkGetIncludeCustomerDTO?> GetIncludeCustomer(Guid id)
+        {
+            Work? work = await _context.Works
+                .Include(x => x.Customer)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            return work?.MapToWorkGetIncludeCustomerDTO();
         }
 
         public async Task<List<WorkGetUpdateDTO>> GetAll()
@@ -48,7 +56,7 @@ namespace Car.Services.Implementation.DB
         {
             var result = await _context.Works
                 .Include(x => x.Customer)
-                .Select(x => x.MapToWorkIncludingCustomerDTO())
+                .Select(x => x.MapToWorkGetIncludeCustomerDTO())
                 .ToListAsync();
 
             return result;
@@ -56,15 +64,9 @@ namespace Car.Services.Implementation.DB
 
         public async Task Update(WorkGetUpdateDTO newWork)
         {
-            Work? work = await GetWorkAsync(newWork.Id);
+            Work? work = await _context.Works.FindAsync(newWork.Id);
             newWork.MapIntoWork(work);
             await _context.SaveChangesAsync();
-        }
-
-
-        private async Task<Work?> GetWorkAsync(Guid id)
-        {
-            return await _context.Works.FindAsync(id);
         }
     }
 }

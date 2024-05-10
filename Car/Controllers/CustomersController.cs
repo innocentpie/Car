@@ -42,7 +42,20 @@ namespace Car.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<CustomerGetUpdateDTO>> Get(Guid id)
         {
-            CustomerGetUpdateDTO customer = await _customerService.Get(id);
+            CustomerGetUpdateDTO? customer = await _customerService.Get(id);
+
+            if (customer is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(customer);
+        }
+
+        [HttpGet("{id:guid}/inclworks")]
+        public async Task<ActionResult<CustomerGetIncludeWorksDTO>> GetIncludeWorks(Guid id)
+        {
+            CustomerGetIncludeWorksDTO? customer = await _customerService.GetIncludeWorks(id);
 
             if (customer is null)
             {
@@ -56,6 +69,12 @@ namespace Car.Controllers
         public async Task<ActionResult<List<CustomerGetUpdateDTO>>> GetAll()
         {
             return Ok(await _customerService.GetAll());
+        }
+
+        [HttpGet("inclworks")]
+        public async Task<ActionResult<List<CustomerGetIncludeWorksDTO>>> GetAllIncludeWorks()
+        {
+            return Ok(await _customerService.GetAllIncludeWorks());
         }
 
         [HttpPut("{id:guid}")]

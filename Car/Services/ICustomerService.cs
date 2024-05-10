@@ -1,5 +1,4 @@
 ﻿using Car.Shared;
-using System;
 
 namespace Car.Services
 {
@@ -11,7 +10,11 @@ namespace Car.Services
 
         Task<CustomerGetUpdateDTO?> Get(Guid id);
 
+        Task<CustomerGetIncludeWorksDTO?> GetIncludeWorks(Guid id);
+
         Task<List<CustomerGetUpdateDTO>> GetAll();
+
+        Task<List<CustomerGetIncludeWorksDTO>> GetAllIncludeWorks();
 
         Task Update(CustomerGetUpdateDTO newCustomer);
     }

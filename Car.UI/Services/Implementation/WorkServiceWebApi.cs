@@ -37,7 +37,12 @@ namespace Car.UI.Services.Implementation
 			return await _httpClient.GetFromJsonAsync<WorkGetUpdateDTO>($"/api/Works/{id}");
 		}
 
-		public async Task UpdateWorkAsync(WorkGetUpdateDTO work)
+        public async Task<WorkGetIncludeCustomerDTO> GetWorkIncludeCustomerAsync(Guid id)
+        {
+            return await _httpClient.GetFromJsonAsync<WorkGetIncludeCustomerDTO>($"/api/Works/{id}/inclcustomer");
+        }
+
+        public async Task UpdateWorkAsync(WorkGetUpdateDTO work)
 		{
 			await _httpClient.PutAsJsonAsync($"/api/Works/{work.Id}", work);
 		}

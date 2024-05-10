@@ -51,6 +51,19 @@ namespace Car.Controllers
             return Ok(work);
         }
 
+        [HttpGet("{id:guid}/inclcustomer")]
+        public async Task<ActionResult<WorkGetIncludeCustomerDTO>> GetIncludeCustomer(Guid id)
+        {
+            WorkGetIncludeCustomerDTO? work = await _workService.GetIncludeCustomer(id);
+
+            if (work is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(work);
+        }
+
         [HttpGet]
         public async Task<ActionResult<List<WorkGetUpdateDTO>>> GetAll()
         {

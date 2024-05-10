@@ -8,6 +8,7 @@ namespace Car.UI.Services
 		Task<IEnumerable<WorkGetIncludeCustomerDTO>> GetAllWorksIncludeCustomerAsync();
 
 		Task<WorkGetUpdateDTO> GetWorkAsync(Guid id);
+		Task<WorkGetIncludeCustomerDTO> GetWorkIncludeCustomerAsync(Guid id);
 
 		Task DeleteWorkAsync(Guid id);
 

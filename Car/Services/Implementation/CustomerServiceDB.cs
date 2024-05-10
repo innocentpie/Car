@@ -24,16 +24,24 @@ namespace Car.Services.Implementation.DB
 
         public async Task Delete(Guid id)
         {
-            Customer customer = await GetCustomerAsync(id);
+            Customer? customer = await _context.Customers.FindAsync(id);
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
         }
 
         public async Task<CustomerGetUpdateDTO?> Get(Guid id)
         {
-            Customer? customer = await GetCustomerAsync(id);
+            Customer? customer = await _context.Customers.FindAsync(id);
             CustomerGetUpdateDTO? dto = customer?.MapToCustomerGetUpdateDTO();
             return dto;
+        }
+
+        public async Task<CustomerGetIncludeWorksDTO?> GetIncludeWorks(Guid id)
+        {
+            Customer? customer = await _context.Customers
+                .Include(x => x.Works)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            return customer?.MapToCustomerGetIncludeWorksDTO();
         }
 
         public async Task<List<CustomerGetUpdateDTO>> GetAll()
@@ -44,17 +52,20 @@ namespace Car.Services.Implementation.DB
             return result;
         }
 
-        public async Task Update(CustomerGetUpdateDTO newCustomer)
+        public async Task<List<CustomerGetIncludeWorksDTO>> GetAllIncludeWorks()
         {
-            Customer? customer = await GetCustomerAsync(newCustomer.Id);
-            newCustomer.MapIntoCustomer(customer);
-            await _context.SaveChangesAsync();
+            var result = await _context.Customers
+                .Include(x => x.Works)
+                .Select(x => x.MapToCustomerGetIncludeWorksDTO())
+                .ToListAsync();
+            return result;
         }
 
-
-        private async Task<Customer?> GetCustomerAsync(Guid id)
+        public async Task Update(CustomerGetUpdateDTO newCustomer)
         {
-            return await _context.Customers.FindAsync(id);
+            Customer? customer = await _context.Customers.FindAsync(newCustomer.Id);
+            newCustomer.MapIntoCustomer(customer);
+            await _context.SaveChangesAsync();
         }
     }
 }
