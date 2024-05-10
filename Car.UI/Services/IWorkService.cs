@@ -4,8 +4,8 @@ namespace Car.UI.Services
 {
 	public interface IWorkService
 	{
-		Task<IEnumerable<WorkGetUpdateDTO>> GetAllWorksAsync();
-		Task<IEnumerable<WorkGetIncludeCustomerDTO>> GetAllWorksIncludeCustomerAsync();
+		Task<IList<WorkGetUpdateDTO>> GetAllWorksAsync();
+		Task<IList<WorkGetIncludeCustomerDTO>> GetAllWorksIncludeCustomerAsync();
 
 		Task<WorkGetUpdateDTO> GetWorkAsync(Guid id);
 		Task<WorkGetIncludeCustomerDTO> GetWorkIncludeCustomerAsync(Guid id);

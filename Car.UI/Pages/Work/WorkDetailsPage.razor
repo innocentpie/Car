@@ -1,0 +1,69 @@
+﻿@page "/work/{id:guid}"
+
+@using Car.Shared
+@using Car.UI.Components
+@using Car.UI.Services
+@inject IWorkService WorkService
+@inject NavigationManager NavigationManager
+
+
+<ConfirmDialog @ref="dialog" />
+
+<h3>WorkDetails</h3>
+
+@if (Work is null)
+{
+	<p>Loading..</p>
+}
+else
+{
+<div class="container-fluid">
+	<div class="row">
+		<div class="col">
+			<WorkForm Work="Work.Work.Properties" OnValidSubmit="UpdateAsync" ButtonText="Update" />
+			<Button Type="ButtonType.Button" Color="ButtonColor.Danger" Class="mt-1" @onclick="DeleteAsync">Delete</Button>
+		</div>
+		<div class="col">
+			<CustomerPropertiesReadOnly Customer="Work.Customer" />
+			<a href="/customer/@Work.Customer.Id" class="btn btn-primary">Details</a>
+		</div>
+	</div>
+</div>
+}
+
+
+@code {
+	[Parameter]
+	public Guid Id { get; set; }
+
+	private WorkGetIncludeCustomerDTO Work { get; set; }
+
+	private ConfirmDialog dialog;
+
+	protected override async Task OnInitializedAsync()
+	{
+		Work = await WorkService.GetWorkIncludeCustomerAsync(Id);
+	}
+
+	private async Task DeleteAsync()
+	{
+		var confirmation = await dialog.ShowAsync(
+			title: "Are you sure you want to delete this work?",
+			message1: "This will delete the work. Once deleted can not be recovered.",
+			message2: "Do you want to proceed?");
+
+		if (confirmation)
+		{
+			// do something
+			await WorkService.DeleteWorkAsync(Id);
+			NavigationManager.NavigateTo("/customer/list");
+		}
+	}
+
+
+	private async Task UpdateAsync()
+	{
+		await WorkService.UpdateWorkAsync(Work.Work);
+		NavigationManager.NavigateTo("/work/list");
+	}
+}

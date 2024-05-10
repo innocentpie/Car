@@ -1,0 +1,51 @@
+﻿@using Car.Shared
+
+
+<EditForm Model="Work" OnValidSubmit="() => OnValidSubmit()">
+<DataAnnotationsValidator />
+
+<div class="mb-3">
+	<label class="form-label">License Plate</label>
+	<InputText @bind-Value="@Work.LicensePlate" class="form-input" />
+	<ValidationMessage For="() => Work.LicensePlate" />
+</div>
+<div class="mb-3">
+	<label class="form-label">Manufacturing Date</label>
+	<InputText @bind-Value="@Work.Description" class="form-input" />
+	<ValidationMessage For="() => Work.Description" />
+</div>
+<div class="mb-3">
+	<label class="form-label">Category</label>
+	<InputText @bind-Value="@Work.Description" class="form-input" />
+	<ValidationMessage For="() => Work.Description" />
+</div>
+<div class="mb-3">
+	<label class="form-label">Description</label>
+	<InputText @bind-Value="@Work.Description" class="form-input" />
+	<ValidationMessage For="() => Work.Description" />
+</div>
+<div class="mb-3">
+	<label class="form-label">Severity</label>
+	<InputText @bind-Value="@Work.Description" class="form-input" />
+	<ValidationMessage For="() => Work.Description" />
+</div>
+<div class="mb-3">
+	<label class="form-label">Status</label>
+	<InputText @bind-Value="@Work.Description" class="form-input" />
+	<ValidationMessage For="() => Work.Description" />
+</div>
+<Button Type="ButtonType.Submit" Color="ButtonColor.Primary">@ButtonText</Button>
+</EditForm>
+
+
+
+@code {
+	[Parameter]
+	public WorkPropertiesDTO Work { get; set; }
+
+	[Parameter]
+	public Func<Task> OnValidSubmit { get; set; }
+
+	[Parameter]
+	public string ButtonText { get; set; }
+}

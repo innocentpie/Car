@@ -1,0 +1,65 @@
+﻿@using Car.Shared
+@using Car.UI.Services
+@inject ICustomerService CustomerService
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col" width="1%">#</th>
+                <th scope="col" class="col-3">Name</th>
+                <th scope="col" class="col-3">Address</th>
+                <th scope="col" class="col-3">Email</th>
+                <th scope="col" width="1%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 1 + (CurrentPageNumber - 1) * ItemsPerPage;
+            }
+            @foreach (var customer in CurrentPageCustomers())
+            {
+                <tr>
+                    <td scope="row">@i</td>
+                    <td>@customer.Properties.Name</td>
+                    <td>@customer.Properties.Address</td>
+                    <td>@customer.Properties.Email</td>
+                    <td><a href="/customer/@customer.Id" class="btn btn-primary">Details</a></td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+</div>
+<Pagination ActivePageNumber="@CurrentPageNumber"
+            TotalPages="@(Customers.Count / ItemsPerPage + (Customers.Count % ItemsPerPage == 0 ? 0 : 1))"
+            DisplayPages="5"
+            PageChanged="@OnPageChangedAsnyc"/>
+
+@code {
+    [Parameter]
+    public IList<CustomerGetUpdateDTO> Customers { get; set; }
+
+    [Parameter]
+    public int ItemsPerPage { get; set; } = 2;
+
+    [Parameter]
+    public int CurrentPageNumber { get; set; } = 1;
+
+    [Parameter]
+    public Func<int,Task>? PageChanged { get; set; }
+
+
+    private IEnumerable<CustomerGetUpdateDTO> CurrentPageCustomers()
+    {
+        return Customers.Skip((CurrentPageNumber - 1) * ItemsPerPage)
+            .Take(ItemsPerPage);
+    }
+
+    private async Task OnPageChangedAsnyc(int newPageNumber)
+    {
+        CurrentPageNumber = newPageNumber;
+        PageChanged?.Invoke(newPageNumber);
+        StateHasChanged();
+    }
+}

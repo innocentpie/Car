@@ -1,0 +1,22 @@
+﻿@using Car.Shared
+
+<div>
+	<div class="mb-3">
+		<label class="label">Name: </label>
+		<label class="label">@Customer.Properties.Name</label>
+	</div>
+	<div class="mb-3">
+		<label class="label">Address: </label>
+		<label class="label">@Customer.Properties.Address</label>
+	</div>
+	<div class="mb-3">
+		<label class="label">Email: </label>
+		<label class="label">@Customer.Properties.Email</label>
+	</div>
+</div>
+
+
+@code {
+	[Parameter]
+	public CustomerGetUpdateDTO Customer { get; set; }
+}

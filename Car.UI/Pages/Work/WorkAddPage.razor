@@ -1,0 +1,21 @@
+﻿@page "/work/add"
+
+@using Car.Shared
+@using Car.UI.Components
+@using Car.UI.Services
+@inject IWorkService WorkService;
+@inject NavigationManager NavigationManager
+
+<h3>Add Work</h3>
+
+<WorkForm Work="Work" OnValidSubmit="AddWorkAsync" ButtonText="Add Work" />
+
+@code {
+	private WorkPropertiesDTO Work { get; set; } = new();
+
+	private async Task AddWorkAsync()
+	{
+		await WorkService.AddWorkAsync(Work);
+		NavigationManager.NavigateTo("/work/list");
+	}
+}

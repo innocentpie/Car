@@ -18,6 +18,8 @@ namespace Car.UI
             builder.Services.AddScoped<ICustomerService, CustomerServiceWebApi>();
             builder.Services.AddScoped<IWorkService, WorkServiceWebApi>();
 
+            builder.Services.AddBlazorBootstrap();
+
             await builder.Build().RunAsync();
         }
     }

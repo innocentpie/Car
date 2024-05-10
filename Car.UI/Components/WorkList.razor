@@ -1,0 +1,74 @@
+﻿@using BlazorBootstrap
+@using Car.Shared
+@using Car.UI.Services
+@inject IWorkService WorkService
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col" width="1%">#</th>
+                <th scope="col" class="col-1">Customer Name</th>
+                <th scope="col" class="col-1">License Plate</th>
+                <th scope="col" class="col-1">Manufacturing Date</th>
+                <th scope="col" class="col-1">Category</th>
+                <th scope="col" class="col-4">Description</th>
+                <th scope="col" class="col-1">Severity</th>
+                <th scope="col" class="col-1">Status</th>
+                <th scope="col" width="1%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int i = 1 + (CurrentPageNumber - 1) * ItemsPerPage;
+            }
+            @foreach (var work in CurrentPageWorks())
+            {
+                <tr>
+                    <td scope="row">@i</td>
+                    <td>@work.Customer.Properties.Name</td>
+                    <td>@work.Work.Properties.LicensePlate</td>
+                    <td>@work.Work.Properties.ManufacturingDate</td>
+                    <td>@work.Work.Properties.Category</td>
+                    <td>@work.Work.Properties.Description</td>
+                    <td>@work.Work.Properties.Severity</td>
+                    <td>@work.Work.Properties.Status</td>
+                    <td><a href="/work/@work.Work.Id" class="btn btn-primary">Details</a></td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+</div>
+<Pagination ActivePageNumber="@CurrentPageNumber"
+            TotalPages="@(Works.Count / ItemsPerPage + (Works.Count % ItemsPerPage == 0 ? 0 : 1))"
+            DisplayPages="5"
+            PageChanged="@OnPageChangedAsnyc" />
+
+@code {
+    [Parameter]
+    public IList<WorkGetIncludeCustomerDTO> Works { get; set; }
+
+    [Parameter]
+    public int ItemsPerPage { get; set; } = 2;
+
+    [Parameter]
+    public Func<int, Task>? PageChanged { get; set; }
+
+    [Parameter]
+    public int CurrentPageNumber { get; set; } = 1;
+
+
+    private IEnumerable<WorkGetIncludeCustomerDTO> CurrentPageWorks()
+    {
+        return Works.Skip((CurrentPageNumber - 1) * ItemsPerPage)
+            .Take(ItemsPerPage);
+    }
+
+    private async Task OnPageChangedAsnyc(int newPageNumber)
+    {
+        CurrentPageNumber = newPageNumber;
+        PageChanged?.Invoke(newPageNumber);
+        StateHasChanged();
+    }
+}

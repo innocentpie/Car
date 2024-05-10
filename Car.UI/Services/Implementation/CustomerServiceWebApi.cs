@@ -22,14 +22,14 @@ namespace Car.UI.Services.Implementation
 			await _httpClient.DeleteAsync($"/api/Customers/{id}");
 		}
 
-		public async Task<IEnumerable<CustomerGetUpdateDTO>> GetAllCustomersAsync()
+		public async Task<IList<CustomerGetUpdateDTO>> GetAllCustomersAsync()
 		{
-			return await _httpClient.GetFromJsonAsync<IEnumerable<CustomerGetUpdateDTO>>("/api/Customers");
+			return await _httpClient.GetFromJsonAsync<IList<CustomerGetUpdateDTO>>("/api/Customers");
 		}
 
-        public async Task<IEnumerable<CustomerGetIncludeWorksDTO>> GetAllCustomersIncludeWorksAsync()
+        public async Task<IList<CustomerGetIncludeWorksDTO>> GetAllCustomersIncludeWorksAsync()
         {
-            return await _httpClient.GetFromJsonAsync<IEnumerable<CustomerGetIncludeWorksDTO>>("/api/Customers/inclworks");
+            return await _httpClient.GetFromJsonAsync<IList<CustomerGetIncludeWorksDTO>>("/api/Customers/inclworks");
         }
 
         public async Task<CustomerGetUpdateDTO> GetCustomerAsync(Guid id)
