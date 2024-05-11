@@ -2,8 +2,17 @@
 @using Car.UI.Services
 @inject ICustomerService CustomerService
 
+@if (EnableSearch)
+{
+    <div class="form-group row mb-3">
+        <label class="col-auto col-form-label">Search: <span class="text-danger" /></label>
+        <div class="col">
+            <input class="form-control" @bind:event="oninput" @bind="Filter" />
+        </div>
+    </div>
+}
 <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table table-striped table-hover">
         <thead>
             <tr>
                 <th scope="col" width="1%">#</th>
@@ -15,51 +24,47 @@
         </thead>
         <tbody>
             @{
-                int i = 1 + (CurrentPageNumber - 1) * ItemsPerPage;
+                int i = 1;
             }
-            @foreach (var customer in CurrentPageCustomers())
+            @foreach (var customer in Customers)
             {
+                if (!FilterMatches(customer))
+                    continue;
                 <tr>
                     <td scope="row">@i</td>
                     <td>@customer.Properties.Name</td>
                     <td>@customer.Properties.Address</td>
                     <td>@customer.Properties.Email</td>
-                    <td><a href="/customer/@customer.Id" class="btn btn-primary">Details</a></td>
+                    <td>@CustomerSelectedButton(customer)</td>
                 </tr>
                 i++;
             }
         </tbody>
     </table>
 </div>
-<Pagination ActivePageNumber="@CurrentPageNumber"
-            TotalPages="@(Customers.Count / ItemsPerPage + (Customers.Count % ItemsPerPage == 0 ? 0 : 1))"
-            DisplayPages="5"
-            PageChanged="@OnPageChangedAsnyc"/>
+
 
 @code {
     [Parameter]
     public IList<CustomerGetUpdateDTO> Customers { get; set; }
 
     [Parameter]
-    public int ItemsPerPage { get; set; } = 2;
+    public bool EnableSearch { get; set; }
 
     [Parameter]
-    public int CurrentPageNumber { get; set; } = 1;
+    public RenderFragment<CustomerGetUpdateDTO> CustomerSelectedButton { get; set; }
 
-    [Parameter]
-    public Func<int,Task>? PageChanged { get; set; }
+    public string? Filter { get; set; }
 
-
-    private IEnumerable<CustomerGetUpdateDTO> CurrentPageCustomers()
+    private bool FilterMatches(CustomerGetUpdateDTO customer)
     {
-        return Customers.Skip((CurrentPageNumber - 1) * ItemsPerPage)
-            .Take(ItemsPerPage);
-    }
+        if (string.IsNullOrWhiteSpace(Filter))
+            return true;
 
-    private async Task OnPageChangedAsnyc(int newPageNumber)
-    {
-        CurrentPageNumber = newPageNumber;
-        PageChanged?.Invoke(newPageNumber);
-        StateHasChanged();
+        string f = Filter.Trim();
+        return customer.Id.ToString().Contains(f, StringComparison.OrdinalIgnoreCase)
+            || customer.Properties.Name.Contains(f, StringComparison.OrdinalIgnoreCase)
+            || customer.Properties.Address.Contains(f, StringComparison.OrdinalIgnoreCase)
+            || customer.Properties.Email.Contains(f, StringComparison.OrdinalIgnoreCase);
     }
 }

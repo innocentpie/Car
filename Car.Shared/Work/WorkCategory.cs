@@ -11,6 +11,6 @@ namespace Car.Shared
         Body = 0,
         Engine = 1,
         RunningGear = 2,
-        Breaks = 3,
+        Brakes = 3,
     }
 }

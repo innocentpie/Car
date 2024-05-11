@@ -6,18 +6,20 @@
 @inject ICustomerService CustomerService
 @inject NavigationManager NavigationManager
 
-<ConfirmDialog @ref="dialog" />
-
 <h3>Customer Details</h3>
 
 @if (Customer is null)
 {
-	<p>Loading..</p>
+	<p>Loading...</p>
 }
 else
 {
-	<CustomerForm Customer="Customer.Properties" ButtonText="Update" OnValidSubmit="UpdateAsync" />
-	<Button Type="ButtonType.Button" Color="ButtonColor.Danger" Class="mt-1" @onclick="DeleteAsync">Delete</Button>
+	<div class="container-fluid p-0">
+		<div class="card p-3">
+			<CustomerForm Customer="Customer.Properties" ButtonText="Update" OnValidSubmit="UpdateAsync" />
+			<button type="button" class="mt-1 w-100 btn btn-danger" @onclick="DeleteAsync">Delete</button>
+		</div>
+	</div>
 }
 
 @code {
@@ -27,7 +29,6 @@ else
 
 	private CustomerGetUpdateDTO? Customer { get; set; }
 
-	private ConfirmDialog dialog;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -36,17 +37,8 @@ else
 
 	private async Task DeleteAsync()
 	{
-		var confirmation = await dialog.ShowAsync(
-			title: "Are you sure you want to delete this customer?",
-			message1: "This will delete the customer. Once deleted can not be recovered.",
-			message2: "Do you want to proceed?");
-
-		if (confirmation)
-		{
-			// do something
-			await CustomerService.DeleteCustomerAsync(Id);
-			NavigationManager.NavigateTo("/customer/list");
-		}
+		await CustomerService.DeleteCustomerAsync(Id);
+		NavigationManager.NavigateTo("/customer/list");
 	}
 
 	private async Task UpdateAsync()

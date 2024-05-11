@@ -19,7 +19,7 @@ namespace Car.Mappers
             {
                 CustomerId = work.CustomerId,
                 LicensePlate = work.LicensePlate,
-                ManufacturingDate = work.ManufacturingDate,
+                ManufacturingYear = work.ManufacturingYear,
                 Category = work.Category,
                 Description = work.Description,
                 Severity = work.Severity,
@@ -42,7 +42,7 @@ namespace Car.Mappers
             {
                 CustomerId = work.CustomerId,
                 LicensePlate = work.LicensePlate,
-                ManufacturingDate = work.ManufacturingDate,
+                ManufacturingYear = work.ManufacturingYear,
                 Category = work.Category,
                 Description = work.Description,
                 Severity = work.Severity,
@@ -54,7 +54,7 @@ namespace Car.Mappers
         {
             work.CustomerId = updateDTO.Properties.CustomerId;
             work.LicensePlate = updateDTO.Properties.LicensePlate;
-            work.ManufacturingDate = updateDTO.Properties.ManufacturingDate;
+            work.ManufacturingYear = updateDTO.Properties.ManufacturingYear;
             work.Category = updateDTO.Properties.Category;
             work.Description = updateDTO.Properties.Description;
             work.Severity = updateDTO.Properties.Severity;

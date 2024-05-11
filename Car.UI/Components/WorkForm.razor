@@ -1,40 +1,100 @@
 ﻿@using Car.Shared
+@using Car.UI.Services
+@inject ICustomerService CustomerService
 
+<div class="modal fade" id="customerSelectModal" tabindex="-1">
+	<div class="modal-dialog justify-content-center modal-fullscreen modal-dialog-centered">
+		<div class="modal-content w-75 h-75">
+			<div class="modal-header">
+				<h5 class="modal-title" id="customerSelectModalLabel">Select the customer</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				@if (Customers == null)
+				{
+					<p>Loading...</p>
+				}
+				else
+				{
+					<CustomerList Customers="Customers" EnableSearch="true">
+						<CustomerSelectedButton>
+							<button @onclick="@(() => CustomerSelected(context))" data-bs-dismiss="modal" class="btn btn-primary">Select</button>
+						</CustomerSelectedButton>
+					</CustomerList>
+				}
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
 
-<EditForm Model="Work" OnValidSubmit="() => OnValidSubmit()">
-<DataAnnotationsValidator />
+<EditForm EditContext="editContext" OnSubmit="OnSubmit">
+	<DataAnnotationsValidator />
 
-<div class="mb-3">
-	<label class="form-label">License Plate</label>
-	<InputText @bind-Value="@Work.LicensePlate" class="form-input" />
-	<ValidationMessage For="() => Work.LicensePlate" />
-</div>
-<div class="mb-3">
-	<label class="form-label">Manufacturing Date</label>
-	<InputText @bind-Value="@Work.Description" class="form-input" />
-	<ValidationMessage For="() => Work.Description" />
-</div>
-<div class="mb-3">
-	<label class="form-label">Category</label>
-	<InputText @bind-Value="@Work.Description" class="form-input" />
-	<ValidationMessage For="() => Work.Description" />
-</div>
-<div class="mb-3">
-	<label class="form-label">Description</label>
-	<InputText @bind-Value="@Work.Description" class="form-input" />
-	<ValidationMessage For="() => Work.Description" />
-</div>
-<div class="mb-3">
-	<label class="form-label">Severity</label>
-	<InputText @bind-Value="@Work.Description" class="form-input" />
-	<ValidationMessage For="() => Work.Description" />
-</div>
-<div class="mb-3">
-	<label class="form-label">Status</label>
-	<InputText @bind-Value="@Work.Description" class="form-input" />
-	<ValidationMessage For="() => Work.Description" />
-</div>
-<Button Type="ButtonType.Submit" Color="ButtonColor.Primary">@ButtonText</Button>
+	<div class="form-group row mb-3">
+		<label class="col-md-2 col-form-label">Customer: <span class="text-danger" /></label>
+		<div class="col-md-10">
+			<div class="input-group">
+				<button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#customerSelectModal">Select</button>
+				<input readonly value="@SelectedCustomer?.Properties.Name" type="text" class="form-control" placeholder="None" />
+			</div>
+			<ValidationMessage For="@(() => Work.CustomerId)" />
+		</div>
+	</div>
+	<div class="form-group row mb-3">
+		<label class="col-md-2 col-form-label">License Plate: <span class="text-danger" /></label>
+		<div class="col-md-10">
+			<InputText class="form-control" @bind-Value="Work.LicensePlate" Placeholder="License Plate" />
+			<ValidationMessage For="@(() => Work.LicensePlate)" />
+		</div>
+	</div>
+	<div class="form-group row mb-3">
+		<label class="col-md-2 col-form-label">Manufacturing Year: <span class="text-danger" /></label>
+		<div class="col-md-10">
+			<InputNumber TValue="int"
+						 @bind-Value="Work.ManufacturingYear"
+						 class="form-control" />
+			<ValidationMessage For="@(() => Work.ManufacturingYear)" />
+		</div>
+	</div>
+	<div class="mb-3">
+		<label class="form-label">Category</label>
+		<InputSelect @bind-Value="Work.Category" class="form-select">
+			<option value="@WorkCategory.Body">Body</option>
+			<option value="@WorkCategory.Engine">Engine</option>
+			<option value="@WorkCategory.RunningGear">Running Gear</option>
+			<option value="@WorkCategory.Brakes">Brakes</option>
+		</InputSelect>
+		<ValidationMessage For="() => Work.Category" />
+	</div>
+	<div class="mb-3">
+		<label class="form-label">Description</label>
+		<InputTextArea Placeholder="Description" rows="3"
+					   @bind-Value="@Work.Description"
+					   class="form-control" />
+		<ValidationMessage For="() => Work.Description" />
+	</div>
+	<div class="mb-3">
+		<label class="form-label">Severity</label>
+		<InputNumber TValue="int"
+					 @bind-Value="@Work.Severity"
+					 class="form-control" />
+		<ValidationMessage For="() => Work.Severity" />
+	</div>
+	<div class="mb-3">
+		<label class="form-label">Status</label>
+		<InputSelect @bind-Value="Work.Status" class="form-select">
+			<option disabled="@(workStatusInitial > WorkStatus.NotStarted)" value="@WorkStatus.NotStarted">Not Started</option>
+			<option disabled="@(workStatusInitial > WorkStatus.InProgress)" value="@WorkStatus.InProgress">In Progress</option>
+			<option disabled="@(workStatusInitial > WorkStatus.Completed)" value="@WorkStatus.Completed">Completed</option>
+		</InputSelect>
+		<ValidationMessage For="() => Work.Status" />
+	</div>
+	<div class="mb-3">
+		<button class="w-100 btn btn-primary" type="submit">@ButtonText</button>
+	</div>
 </EditForm>
 
 
@@ -48,4 +108,54 @@
 
 	[Parameter]
 	public string ButtonText { get; set; }
+
+	[Parameter]
+	public CustomerGetUpdateDTO? SelectedCustomer { get; set; }
+
+	private EditContext editContext;
+	private ValidationMessageStore validationMessages;
+
+	private IList<CustomerGetUpdateDTO> Customers { get; set; }
+
+	private WorkStatus workStatusInitial;
+
+	protected override async Task OnInitializedAsync()
+	{
+		editContext = new(Work);
+		validationMessages = new(editContext);
+
+		workStatusInitial = Work.Status;
+		Customers = await CustomerService.GetAllCustomersAsync();
+	}
+
+	private async Task CustomerSelected(CustomerGetUpdateDTO customer)
+	{
+		SelectedCustomer = customer;
+		Work.CustomerId = customer.Id;
+		RevalidateForm();
+		StateHasChanged();
+	}
+
+	private async Task OnSubmit()
+	{
+		if (RevalidateForm())
+			await OnValidSubmit();
+	}
+
+	private bool RevalidateForm()
+	{
+		bool valid = editContext.Validate();
+		var customerIdField = editContext.Field(nameof(Work.CustomerId));
+		if (Work.CustomerId == Guid.Empty)
+		{
+			validationMessages.Clear(customerIdField);
+			validationMessages.Add(customerIdField, "Customer is required.");
+			valid = false;
+		}
+		else
+		{
+			validationMessages.Clear(customerIdField);
+		}
+		return valid;
+	}
 }

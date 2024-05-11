@@ -17,12 +17,12 @@ namespace Car
         public virtual Customer Customer { get; set; }
 
         [Required]
-        [RegularExpression("^[A-Z]{3}-[1-9]{3}$")]
+        [RegularExpression("^[A-Z]{3}-[0-9]{3}$")]
         public string LicensePlate { get; set; }
 
         [Required]
-        [Range(typeof(DateTime), "1900-01-01", "9999-12-31")]
-        public DateTime ManufacturingDate { get; set; }
+        [Range(1900, int.MaxValue)]
+        public int ManufacturingYear { get; set; }
 
         [Required]
         public WorkCategory Category { get; set; }
@@ -32,7 +32,7 @@ namespace Car
         public string Description { get; set; }
 
         [Required]
-        [Range(0, 10)]
+        [Range(1, 10)]
         public int Severity { get; set; }
 
         [Required]

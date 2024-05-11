@@ -19,6 +19,9 @@ namespace Car.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] WorkPropertiesDTO work)
         {
+            if (work.CustomerId == Guid.Empty)
+                return BadRequest();
+
             await _workService.Add(work);
             return Ok();
         }

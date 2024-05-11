@@ -10,20 +10,18 @@
 
 @if (Customers is null)
 {
-	<p>Loading..</p>
+	<p>Loading...</p>
 }
 else
 {
-	<CustomerList Customers="Customers" ItemsPerPage="2" CurrentPageNumber="cPage" PageChanged="PageChanged"/>
+	<CustomerList Customers="Customers" EnableSearch="true">
+		<CustomerSelectedButton>
+			<button @onclick="@(() => NavigateToCustomer(context))" class="btn btn-primary">Details</button>
+		</CustomerSelectedButton>
+	</CustomerList>
 }
 
 @code {
-	[SupplyParameterFromQuery(Name = "page")]
-	[Parameter]
-	public int? Page { get; set; }
-
-	private int cPage => Page ?? 1;
-
 	private IList<CustomerGetUpdateDTO>? Customers { get; set; }
 
 	protected override async Task OnInitializedAsync()
@@ -31,9 +29,8 @@ else
 		Customers = await CustomerService.GetAllCustomersAsync();
 	}
 
-	private async Task PageChanged(int newPage)
+	private async Task NavigateToCustomer(CustomerGetUpdateDTO customer)
 	{
-		Page = newPage;
-		Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("page", newPage));
+		Navigation.NavigateTo($"/customer/{customer.Id}");
 	}
 }

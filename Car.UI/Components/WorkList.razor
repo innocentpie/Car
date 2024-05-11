@@ -1,5 +1,4 @@
-﻿@using BlazorBootstrap
-@using Car.Shared
+﻿@using Car.Shared
 @using Car.UI.Services
 @inject IWorkService WorkService
 
@@ -20,17 +19,21 @@
         </thead>
         <tbody>
             @{
-                int i = 1 + (CurrentPageNumber - 1) * ItemsPerPage;
+                int i = 1;
             }
-            @foreach (var work in CurrentPageWorks())
+            @foreach (var work in Works)
             {
                 <tr>
                     <td scope="row">@i</td>
                     <td>@work.Customer.Properties.Name</td>
                     <td>@work.Work.Properties.LicensePlate</td>
-                    <td>@work.Work.Properties.ManufacturingDate</td>
+                    <td>@work.Work.Properties.ManufacturingYear</td>
                     <td>@work.Work.Properties.Category</td>
-                    <td>@work.Work.Properties.Description</td>
+                    <td style="max-width: 1px">
+                        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            @work.Work.Properties.Description
+                        </div>
+                    </td>
                     <td>@work.Work.Properties.Severity</td>
                     <td>@work.Work.Properties.Status</td>
                     <td><a href="/work/@work.Work.Id" class="btn btn-primary">Details</a></td>
@@ -40,35 +43,8 @@
         </tbody>
     </table>
 </div>
-<Pagination ActivePageNumber="@CurrentPageNumber"
-            TotalPages="@(Works.Count / ItemsPerPage + (Works.Count % ItemsPerPage == 0 ? 0 : 1))"
-            DisplayPages="5"
-            PageChanged="@OnPageChangedAsnyc" />
 
 @code {
     [Parameter]
     public IList<WorkGetIncludeCustomerDTO> Works { get; set; }
-
-    [Parameter]
-    public int ItemsPerPage { get; set; } = 2;
-
-    [Parameter]
-    public Func<int, Task>? PageChanged { get; set; }
-
-    [Parameter]
-    public int CurrentPageNumber { get; set; } = 1;
-
-
-    private IEnumerable<WorkGetIncludeCustomerDTO> CurrentPageWorks()
-    {
-        return Works.Skip((CurrentPageNumber - 1) * ItemsPerPage)
-            .Take(ItemsPerPage);
-    }
-
-    private async Task OnPageChangedAsnyc(int newPageNumber)
-    {
-        CurrentPageNumber = newPageNumber;
-        PageChanged?.Invoke(newPageNumber);
-        StateHasChanged();
-    }
 }

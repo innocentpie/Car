@@ -10,30 +10,18 @@
 
 @if (Works is null)
 {
-    <p>Loading..</p>
+    <p>Loading...</p>
 }
 else
 {
-    <WorkList Works="Works" ItemsPerPage="2" CurrentPageNumber="cPage" PageChanged="PageChanged" />
+    <WorkList Works="Works" />
 }
 
 @code {
-    [SupplyParameterFromQuery(Name = "page")]
-    [Parameter]
-    public int? Page { get; set; }
-
-    private int cPage => Page ?? 1;
-
     private IList<WorkGetIncludeCustomerDTO>? Works { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Works = await WorkService.GetAllWorksIncludeCustomerAsync();
-    }
-
-    private async Task PageChanged(int newPage)
-    {
-        Page = newPage;
-        Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("page", newPage));
     }
 }

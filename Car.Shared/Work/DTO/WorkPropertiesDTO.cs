@@ -8,12 +8,12 @@ namespace Car.Shared
         public Guid CustomerId { get; set; }
 
         [Required]
-        [RegularExpression("^[A-Z]{3}-[1-9]{3}$")]
+        [RegularExpression("^[A-Z]{3}-[0-9]{3}$", ErrorMessage = "Must be a valid license plate number! (XXX-YYY where Xs are upper case letters and Ys are numbers 0-9)")]
         public string LicensePlate { get; set; }
 
         [Required]
-        [Range(typeof(DateTime), "1900-01-01", "9999-12-31")]
-        public DateTime ManufacturingDate { get; set; }
+        [Range(1900, int.MaxValue)]
+        public int ManufacturingYear { get; set; }
 
         [Required]
         public WorkCategory Category { get; set; }
@@ -23,7 +23,7 @@ namespace Car.Shared
         public string Description { get; set; }
 
         [Required]
-        [Range(0, 10)]
+        [Range(1, 10)]
         public int Severity { get; set; }
 
         [Required]

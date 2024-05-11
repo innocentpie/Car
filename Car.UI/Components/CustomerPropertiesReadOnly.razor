@@ -1,17 +1,23 @@
 ﻿@using Car.Shared
 
 <div>
-	<div class="mb-3">
-		<label class="label">Name: </label>
-		<label class="label">@Customer.Properties.Name</label>
+	<div class="form-group row mb-3">
+		<label class="col-md-2 col-form-label">Name: </label>
+		<div class="col-md-10">
+			<label class="form-control-plaintext">@Customer.Properties.Name</label>
+		</div>
 	</div>
-	<div class="mb-3">
-		<label class="label">Address: </label>
-		<label class="label">@Customer.Properties.Address</label>
+	<div class="form-group row mb-3">
+		<label class="col-md-2 col-form-label">Address: </label>
+		<div class="col-md-10">
+			<label class="form-control-plaintext">@Customer.Properties.Address</label>
+		</div>
 	</div>
-	<div class="mb-3">
-		<label class="label">Email: </label>
-		<label class="label">@Customer.Properties.Email</label>
+	<div class="form-group row mb-3">
+		<label class="col-md-2 col-form-label">Email: </label>
+		<div class="col-md-10">
+			<label class="form-control-plaintext">@Customer.Properties.Email</label>
+		</div>
 	</div>
 </div>
 
