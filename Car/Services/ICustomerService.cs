@@ -8,14 +8,10 @@ namespace Car.Services
 
         Task Delete(Guid id);
 
-        Task<CustomerGetUpdateDTO?> Get(Guid id);
+        Task<CustomerGetDTO?> Get(Guid id, bool includeWorks = false);
 
-        Task<CustomerGetIncludeWorksDTO?> GetIncludeWorks(Guid id);
+        Task<List<CustomerGetDTO>> GetAll(bool includeWorks = false);
 
-        Task<List<CustomerGetUpdateDTO>> GetAll();
-
-        Task<List<CustomerGetIncludeWorksDTO>> GetAllIncludeWorks();
-
-        Task Update(CustomerGetUpdateDTO newCustomer);
+        Task Update(CustomerDTO newCustomer);
     }
 }

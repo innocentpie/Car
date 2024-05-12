@@ -12,18 +12,18 @@ namespace Car.Shared
         public string LicensePlate { get; set; }
 
         [Required]
-        [Range(1900, int.MaxValue)]
+        [Range(1900, int.MaxValue, ErrorMessage = "The Manufacturing Year field's minimum value is 1900.")]
         public int ManufacturingYear { get; set; }
 
         [Required]
         public WorkCategory Category { get; set; }
 
         [Required(AllowEmptyStrings = false)]
-        [MaxLength(10000)]
+        [MaxLength(10000, ErrorMessage = "The Description field's maximum allowed length is 10000 characters.")]
         public string Description { get; set; }
 
         [Required]
-        [Range(1, 10)]
+        [Range(1, 10, ErrorMessage = "The Severity field must be between 1 and 10.")]
         public int Severity { get; set; }
 
         [Required]

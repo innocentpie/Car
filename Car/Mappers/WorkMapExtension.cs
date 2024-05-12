@@ -4,15 +4,6 @@ namespace Car.Mappers
 {
     public static class WorkMapExtension
     {
-        public static WorkGetIncludeCustomerDTO MapToWorkGetIncludeCustomerDTO(this Work work)
-        {
-            return new WorkGetIncludeCustomerDTO()
-            {
-                Work = work.MapToWorkGetUpdateDTO(),
-                Customer = work.Customer.MapToCustomerGetUpdateDTO(),
-            };
-        }
-
         public static WorkPropertiesDTO MapToWorkPropertiesDTO(this Work work)
         {
             return new WorkPropertiesDTO()
@@ -27,12 +18,21 @@ namespace Car.Mappers
             };
         }
 
-        public static WorkGetUpdateDTO MapToWorkGetUpdateDTO(this Work work)
+        public static WorkDTO MapToWorkDTO(this Work work)
         {
-            return new WorkGetUpdateDTO()
+            return new WorkDTO()
             {
                 Id = work.Id,
                 Properties = work.MapToWorkPropertiesDTO(),
+            };
+        }
+
+        public static WorkGetDTO MapToWorkGetDTO(this Work work, bool includeCustomer = false)
+        {
+            return new WorkGetDTO()
+            {
+                Work = work.MapToWorkDTO(),
+                Customer = includeCustomer ? work.Customer.MapToCustomerDTO() : null,
             };
         }
 
@@ -50,7 +50,7 @@ namespace Car.Mappers
             };
         }
 
-        public static void MapIntoWork(this WorkGetUpdateDTO updateDTO, Work work)
+        public static void MapIntoWork(this WorkDTO updateDTO, Work work)
         {
             work.CustomerId = updateDTO.Properties.CustomerId;
             work.LicensePlate = updateDTO.Properties.LicensePlate;

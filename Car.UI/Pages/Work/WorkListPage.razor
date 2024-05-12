@@ -18,10 +18,10 @@ else
 }
 
 @code {
-    private IList<WorkGetIncludeCustomerDTO>? Works { get; set; }
+    private IList<WorkGetDTO>? Works { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Works = await WorkService.GetAllWorksIncludeCustomerAsync();
+        Works = await WorkService.GetAllWorksAsync(includeCustomer: true);
     }
 }

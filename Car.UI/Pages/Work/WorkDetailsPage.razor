@@ -46,11 +46,11 @@ else
 	[Parameter]
 	public Guid Id { get; set; }
 
-	private WorkGetIncludeCustomerDTO Work { get; set; }
+	private WorkGetDTO Work { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
-		Work = await WorkService.GetWorkIncludeCustomerAsync(Id);
+		Work = await WorkService.GetWorkAsync(Id, includeCustomer: true);
 	}
 
 	private async Task DeleteAsync()

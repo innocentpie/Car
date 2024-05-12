@@ -4,17 +4,6 @@ namespace Car.Mappers
 {
     public static class CustomerMapExtension
     {
-        public static CustomerGetIncludeWorksDTO MapToCustomerGetIncludeWorksDTO(this Customer customer)
-        {
-            return new CustomerGetIncludeWorksDTO()
-            {
-                Customer = customer.MapToCustomerGetUpdateDTO(),
-                Works = customer.Works
-                    .Select(x => x.MapToWorkGetUpdateDTO())
-                    .ToList(),
-            };
-        }
-
         public static CustomerPropertiesDTO MapToCustomerPropertiesDTO(this Customer customer)
         {
             return new CustomerPropertiesDTO()
@@ -25,12 +14,21 @@ namespace Car.Mappers
             };
         }
 
-        public static CustomerGetUpdateDTO MapToCustomerGetUpdateDTO(this Customer customer)
+        public static CustomerDTO MapToCustomerDTO(this Customer customer)
         {
-            return new CustomerGetUpdateDTO()
+            return new CustomerDTO()
             {
                 Id = customer.Id,
                 Properties = customer.MapToCustomerPropertiesDTO(),
+            };
+        }
+
+        public static CustomerGetDTO MapToCustomerGetDTO(this Customer customer, bool includeWorks = false)
+        {
+            return new CustomerGetDTO()
+            {
+                Customer = customer.MapToCustomerDTO(),
+                Works = includeWorks ? customer.Works?.Select(x => x.MapToWorkDTO()).ToList() : null,
             };
         }
 
@@ -44,7 +42,7 @@ namespace Car.Mappers
             };
         }
 
-        public static void MapIntoCustomer(this CustomerGetUpdateDTO updateDTO, Customer customer)
+        public static void MapIntoCustomer(this CustomerDTO updateDTO, Customer customer)
         {
             customer.Name = updateDTO.Properties.Name;
             customer.Address = updateDTO.Properties.Address;

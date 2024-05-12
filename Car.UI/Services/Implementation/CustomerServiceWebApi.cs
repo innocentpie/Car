@@ -1,5 +1,8 @@
 ﻿using Car.Shared;
+using System.Collections.Specialized;
 using System.Net.Http.Json;
+using System.Text;
+using System.Web;
 
 namespace Car.UI.Services.Implementation
 {
@@ -22,27 +25,25 @@ namespace Car.UI.Services.Implementation
 			await _httpClient.DeleteAsync($"/api/Customers/{id}");
 		}
 
-		public async Task<IList<CustomerGetUpdateDTO>> GetAllCustomersAsync()
+		public async Task<IList<CustomerGetDTO>> GetAllCustomersAsync(bool includeWorks = false)
 		{
-			return await _httpClient.GetFromJsonAsync<IList<CustomerGetUpdateDTO>>("/api/Customers");
+            StringBuilder uriSb = new StringBuilder("/api/Customers/?");
+            if (includeWorks)
+                uriSb.Append($"includeWorks={includeWorks}");
+
+            return await _httpClient.GetFromJsonAsync<IList<CustomerGetDTO>>(uriSb.ToString());
 		}
 
-        public async Task<IList<CustomerGetIncludeWorksDTO>> GetAllCustomersIncludeWorksAsync()
-        {
-            return await _httpClient.GetFromJsonAsync<IList<CustomerGetIncludeWorksDTO>>("/api/Customers/inclworks");
-        }
-
-        public async Task<CustomerGetUpdateDTO> GetCustomerAsync(Guid id)
+        public async Task<CustomerGetDTO> GetCustomerAsync(Guid id, bool includeWorks = false)
 		{
-			return await _httpClient.GetFromJsonAsync<CustomerGetUpdateDTO>($"/api/Customers/{id}");
+            StringBuilder uriSb = new StringBuilder($"/api/Customers/{id}/?");
+            if (includeWorks)
+                uriSb.Append($"includeWorks={includeWorks}");
+
+            return await _httpClient.GetFromJsonAsync<CustomerGetDTO>(uriSb.ToString());
 		}
 
-        public async Task<CustomerGetIncludeWorksDTO> GetCustomerIncludeWorksAsync(Guid id)
-        {
-            return await _httpClient.GetFromJsonAsync<CustomerGetIncludeWorksDTO>($"/api/Customers/{id}/inclworks");
-        }
-
-        public async Task UpdateCustomerAsync(CustomerGetUpdateDTO customer)
+        public async Task UpdateCustomerAsync(CustomerDTO customer)
 		{
 			await _httpClient.PutAsJsonAsync($"/api/Customers/{customer.Id}", customer);
 		}

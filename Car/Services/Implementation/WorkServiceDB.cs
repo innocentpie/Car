@@ -2,6 +2,7 @@
 using Car.Mappers;
 using Car.Shared;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Car.Services.Implementation.DB
 {
@@ -28,41 +29,31 @@ namespace Car.Services.Implementation.DB
             await _context.SaveChangesAsync();
         }
 
-        public async Task<WorkGetUpdateDTO?> Get(Guid id)
+        public async Task<WorkGetDTO?> Get(Guid id, bool includeCustomers = false)
         {
-            Work? work = await _context.Works.FindAsync(id);
-            WorkGetUpdateDTO? dto = work?.MapToWorkGetUpdateDTO();
+            IQueryable<Work> query = _context.Works;
+            if (includeCustomers)
+                query = query.Include(x => x.Customer);
+
+            Work? work = await query.FirstOrDefaultAsync(x => x.Id == id);
+
+			WorkGetDTO? dto = work?.MapToWorkGetDTO(includeCustomers);
             return dto;
         }
 
-        public async Task<WorkGetIncludeCustomerDTO?> GetIncludeCustomer(Guid id)
+        public async Task<List<WorkGetDTO>> GetAll(bool includeCustomers = false)
         {
-            Work? work = await _context.Works
-                .Include(x => x.Customer)
-                .FirstOrDefaultAsync(x => x.Id == id);
-            return work?.MapToWorkGetIncludeCustomerDTO();
-        }
-
-        public async Task<List<WorkGetUpdateDTO>> GetAll()
-        {
-            var result = await _context.Works
-                .Select(x => x.MapToWorkGetUpdateDTO())
+			IQueryable<Work> query = _context.Works;
+			if (includeCustomers)
+				query = query.Include(x => x.Customer);
+			var result = await query
+                .Select(x => x.MapToWorkGetDTO(includeCustomers))
                 .ToListAsync();
 
             return result;
         }
 
-        public async Task<List<WorkGetIncludeCustomerDTO>> GetAllIncludeCustomer()
-        {
-            var result = await _context.Works
-                .Include(x => x.Customer)
-                .Select(x => x.MapToWorkGetIncludeCustomerDTO())
-                .ToListAsync();
-
-            return result;
-        }
-
-        public async Task Update(WorkGetUpdateDTO newWork)
+        public async Task Update(WorkDTO newWork)
         {
             Work? work = await _context.Works.FindAsync(newWork.Id);
             newWork.MapIntoWork(work);

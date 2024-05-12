@@ -2,12 +2,12 @@
 
 namespace Car.Shared
 {
-    public class WorkGetUpdateDTO
+    public class CustomerDTO
     {
         [Required]
         public Guid Id { get; set; }
 
         [Required]
-        public WorkPropertiesDTO Properties { get; set; }
+        public CustomerPropertiesDTO Properties { get; set; }
     }
 }

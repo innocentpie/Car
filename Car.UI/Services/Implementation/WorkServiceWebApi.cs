@@ -1,5 +1,8 @@
 ﻿using Car.Shared;
+using System.Collections.Specialized;
 using System.Net.Http.Json;
+using System.Text;
+using System.Web;
 
 namespace Car.UI.Services.Implementation
 {
@@ -22,27 +25,25 @@ namespace Car.UI.Services.Implementation
 			await _httpClient.DeleteAsync($"/api/Works/{id}");
 		}
 
-		public async Task<IList<WorkGetUpdateDTO>> GetAllWorksAsync()
+		public async Task<IList<WorkGetDTO>> GetAllWorksAsync(bool includeCustomer = false)
 		{
-			return await _httpClient.GetFromJsonAsync<IList<WorkGetUpdateDTO>>("/api/Works");
+			StringBuilder uriSb = new StringBuilder("/api/Works?");
+			if (includeCustomer)
+				uriSb.Append($"includeCustomer={includeCustomer}");
+
+            return await _httpClient.GetFromJsonAsync<IList<WorkGetDTO>>(uriSb.ToString());
 		}
 
-        public async Task<IList<WorkGetIncludeCustomerDTO>> GetAllWorksIncludeCustomerAsync()
-        {
-            return await _httpClient.GetFromJsonAsync<IList<WorkGetIncludeCustomerDTO>>("/api/Works/inclcustomer");
-        }
-
-        public async Task<WorkGetUpdateDTO> GetWorkAsync(Guid id)
+        public async Task<WorkGetDTO> GetWorkAsync(Guid id, bool includeCustomer = false)
 		{
-			return await _httpClient.GetFromJsonAsync<WorkGetUpdateDTO>($"/api/Works/{id}");
+            StringBuilder uriSb = new StringBuilder($"/api/Works/{id}?");
+            if (includeCustomer)
+                uriSb.Append($"includeCustomer={includeCustomer}");
+
+            return await _httpClient.GetFromJsonAsync<WorkGetDTO>(uriSb.ToString());
 		}
 
-        public async Task<WorkGetIncludeCustomerDTO> GetWorkIncludeCustomerAsync(Guid id)
-        {
-            return await _httpClient.GetFromJsonAsync<WorkGetIncludeCustomerDTO>($"/api/Works/{id}/inclcustomer");
-        }
-
-        public async Task UpdateWorkAsync(WorkGetUpdateDTO work)
+        public async Task UpdateWorkAsync(WorkDTO work)
 		{
 			await _httpClient.PutAsJsonAsync($"/api/Works/{work.Id}", work);
 		}

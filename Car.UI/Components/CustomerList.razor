@@ -32,9 +32,9 @@
                     continue;
                 <tr>
                     <td scope="row">@i</td>
-                    <td>@customer.Properties.Name</td>
-                    <td>@customer.Properties.Address</td>
-                    <td>@customer.Properties.Email</td>
+                    <td>@customer.Customer.Properties.Name</td>
+                    <td>@customer.Customer.Properties.Address</td>
+                    <td>@customer.Customer.Properties.Email</td>
                     <td>@CustomerSelectedButton(customer)</td>
                 </tr>
                 i++;
@@ -46,25 +46,25 @@
 
 @code {
     [Parameter]
-    public IList<CustomerGetUpdateDTO> Customers { get; set; }
+    public IList<CustomerGetDTO> Customers { get; set; }
 
     [Parameter]
     public bool EnableSearch { get; set; }
 
     [Parameter]
-    public RenderFragment<CustomerGetUpdateDTO> CustomerSelectedButton { get; set; }
+    public RenderFragment<CustomerGetDTO> CustomerSelectedButton { get; set; }
 
     public string? Filter { get; set; }
 
-    private bool FilterMatches(CustomerGetUpdateDTO customer)
+    private bool FilterMatches(CustomerGetDTO customer)
     {
         if (string.IsNullOrWhiteSpace(Filter))
             return true;
 
         string f = Filter.Trim();
-        return customer.Id.ToString().Contains(f, StringComparison.OrdinalIgnoreCase)
-            || customer.Properties.Name.Contains(f, StringComparison.OrdinalIgnoreCase)
-            || customer.Properties.Address.Contains(f, StringComparison.OrdinalIgnoreCase)
-            || customer.Properties.Email.Contains(f, StringComparison.OrdinalIgnoreCase);
+        return customer.Customer.Id.ToString().Contains(f, StringComparison.OrdinalIgnoreCase)
+            || customer.Customer.Properties.Name.Contains(f, StringComparison.OrdinalIgnoreCase)
+            || customer.Customer.Properties.Address.Contains(f, StringComparison.OrdinalIgnoreCase)
+            || customer.Customer.Properties.Email.Contains(f, StringComparison.OrdinalIgnoreCase);
     }
 }

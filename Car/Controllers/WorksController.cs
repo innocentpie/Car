@@ -29,7 +29,7 @@ namespace Car.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            WorkGetUpdateDTO? work = await _workService.Get(id);
+            WorkGetDTO? work = await _workService.Get(id);
 
             if (work is null)
             {
@@ -42,22 +42,9 @@ namespace Car.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<WorkGetUpdateDTO>> Get(Guid id)
+        public async Task<ActionResult<WorkGetDTO>> Get(Guid id, [FromQuery] bool includeCustomer = false)
         {
-            WorkGetUpdateDTO? work = await _workService.Get(id);
-
-            if (work is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(work);
-        }
-
-        [HttpGet("{id:guid}/inclcustomer")]
-        public async Task<ActionResult<WorkGetIncludeCustomerDTO>> GetIncludeCustomer(Guid id)
-        {
-            WorkGetIncludeCustomerDTO? work = await _workService.GetIncludeCustomer(id);
+            WorkGetDTO? work = await _workService.Get(id, includeCustomer);
 
             if (work is null)
             {
@@ -68,19 +55,13 @@ namespace Car.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<WorkGetUpdateDTO>>> GetAll()
+        public async Task<ActionResult<List<WorkGetDTO>>> GetAll(bool includeCustomer = false)
         {
-            return Ok(await _workService.GetAll());
-        }
-
-        [HttpGet("inclcustomer")]
-        public async Task<ActionResult<List<WorkGetIncludeCustomerDTO>>> GetAllIncludeCustomer()
-        {
-            return Ok(await _workService.GetAllIncludeCustomer());
+            return Ok(await _workService.GetAll(includeCustomer));
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] WorkGetUpdateDTO newWork)
+        public async Task<IActionResult> Update(Guid id, [FromBody] WorkDTO newWork)
         {
             if (id != newWork.Id)
             {

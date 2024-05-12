@@ -29,39 +29,30 @@ namespace Car.Services.Implementation.DB
             await _context.SaveChangesAsync();
         }
 
-        public async Task<CustomerGetUpdateDTO?> Get(Guid id)
+        public async Task<CustomerGetDTO?> Get(Guid id, bool includeWorks = false)
         {
-            Customer? customer = await _context.Customers.FindAsync(id);
-            CustomerGetUpdateDTO? dto = customer?.MapToCustomerGetUpdateDTO();
+			IQueryable<Customer> query = _context.Customers;
+			if (includeWorks)
+				query = query.Include(x => x.Works);
+
+			Customer? customer = await query.FirstOrDefaultAsync(x => x.Id == id);
+            CustomerGetDTO? dto = customer?.MapToCustomerGetDTO(includeWorks);
             return dto;
         }
 
-        public async Task<CustomerGetIncludeWorksDTO?> GetIncludeWorks(Guid id)
+        public async Task<List<CustomerGetDTO>> GetAll(bool includeWorks = false)
         {
-            Customer? customer = await _context.Customers
-                .Include(x => x.Works)
-                .FirstOrDefaultAsync(x => x.Id == id);
-            return customer?.MapToCustomerGetIncludeWorksDTO();
-        }
+			IQueryable<Customer> query = _context.Customers;
+			if (includeWorks)
+				query = query.Include(x => x.Works);
 
-        public async Task<List<CustomerGetUpdateDTO>> GetAll()
-        {
-            var result = await _context.Customers
-                .Select(x => x.MapToCustomerGetUpdateDTO())
+			var result = await query
+                .Select(x => x.MapToCustomerGetDTO(includeWorks))
                 .ToListAsync();
             return result;
         }
 
-        public async Task<List<CustomerGetIncludeWorksDTO>> GetAllIncludeWorks()
-        {
-            var result = await _context.Customers
-                .Include(x => x.Works)
-                .Select(x => x.MapToCustomerGetIncludeWorksDTO())
-                .ToListAsync();
-            return result;
-        }
-
-        public async Task Update(CustomerGetUpdateDTO newCustomer)
+        public async Task Update(CustomerDTO newCustomer)
         {
             Customer? customer = await _context.Customers.FindAsync(newCustomer.Id);
             newCustomer.MapIntoCustomer(customer);

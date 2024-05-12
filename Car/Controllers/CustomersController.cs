@@ -27,7 +27,7 @@ namespace Car.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            CustomerGetUpdateDTO? customer = await _customerService.Get(id);
+            CustomerGetDTO? customer = await _customerService.Get(id);
 
             if (customer is null)
             {
@@ -40,22 +40,9 @@ namespace Car.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<CustomerGetUpdateDTO>> Get(Guid id)
+        public async Task<ActionResult<CustomerGetDTO>> Get(Guid id, [FromQuery] bool includeWorks = false)
         {
-            CustomerGetUpdateDTO? customer = await _customerService.Get(id);
-
-            if (customer is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(customer);
-        }
-
-        [HttpGet("{id:guid}/inclworks")]
-        public async Task<ActionResult<CustomerGetIncludeWorksDTO>> GetIncludeWorks(Guid id)
-        {
-            CustomerGetIncludeWorksDTO? customer = await _customerService.GetIncludeWorks(id);
+            CustomerGetDTO? customer = await _customerService.Get(id, includeWorks);
 
             if (customer is null)
             {
@@ -66,19 +53,13 @@ namespace Car.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CustomerGetUpdateDTO>>> GetAll()
+        public async Task<ActionResult<List<CustomerGetDTO>>> GetAll([FromQuery] bool includeWorks = false)
         {
-            return Ok(await _customerService.GetAll());
-        }
-
-        [HttpGet("inclworks")]
-        public async Task<ActionResult<List<CustomerGetIncludeWorksDTO>>> GetAllIncludeWorks()
-        {
-            return Ok(await _customerService.GetAllIncludeWorks());
+            return Ok(await _customerService.GetAll(includeWorks));
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] CustomerGetUpdateDTO newCustomer)
+        public async Task<IActionResult> Update(Guid id, [FromBody] CustomerDTO newCustomer)
         {
             if (id != newCustomer.Id)
             {

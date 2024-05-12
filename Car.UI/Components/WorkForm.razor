@@ -110,12 +110,12 @@
 	public string ButtonText { get; set; }
 
 	[Parameter]
-	public CustomerGetUpdateDTO? SelectedCustomer { get; set; }
+	public CustomerDTO? SelectedCustomer { get; set; }
 
 	private EditContext editContext;
 	private ValidationMessageStore validationMessages;
 
-	private IList<CustomerGetUpdateDTO> Customers { get; set; }
+	private IList<CustomerGetDTO> Customers { get; set; }
 
 	private WorkStatus workStatusInitial;
 
@@ -128,10 +128,10 @@
 		Customers = await CustomerService.GetAllCustomersAsync();
 	}
 
-	private async Task CustomerSelected(CustomerGetUpdateDTO customer)
+	private async Task CustomerSelected(CustomerGetDTO customer)
 	{
-		SelectedCustomer = customer;
-		Work.CustomerId = customer.Id;
+		SelectedCustomer = customer.Customer;
+		Work.CustomerId = customer.Customer.Id;
 		RevalidateForm();
 		StateHasChanged();
 	}

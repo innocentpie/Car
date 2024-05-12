@@ -22,15 +22,15 @@ else
 }
 
 @code {
-	private IList<CustomerGetUpdateDTO>? Customers { get; set; }
+	private IList<CustomerGetDTO>? Customers { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
 		Customers = await CustomerService.GetAllCustomersAsync();
 	}
 
-	private async Task NavigateToCustomer(CustomerGetUpdateDTO customer)
+	private async Task NavigateToCustomer(CustomerGetDTO customer)
 	{
-		Navigation.NavigateTo($"/customer/{customer.Id}");
+		Navigation.NavigateTo($"/customer/{customer.Customer.Id}");
 	}
 }
