@@ -6,6 +6,6 @@ namespace Car.Shared
     {
         public WorkDTO Work { get; set; }
 
-        public CustomerDTO? Customer { get; set; }
+        public CustomerGetDTO? Customer { get; set; }
     }
 }

@@ -28,7 +28,7 @@ namespace Car.Mappers
             return new CustomerGetDTO()
             {
                 Customer = customer.MapToCustomerDTO(),
-                Works = includeWorks ? customer.Works?.Select(x => x.MapToWorkDTO()).ToList() : null,
+                Works = includeWorks ? customer.Works?.Select(x => x.MapToWorkGetDTO()).ToList() : null,
             };
         }
 

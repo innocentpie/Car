@@ -5,7 +5,7 @@
 @if (EnableSearch)
 {
     <div class="form-group row mb-3">
-        <label class="col-auto col-form-label">Search: <span class="text-danger" /></label>
+        <label class="col-auto col-form-label">Search: </label>
         <div class="col">
             <input class="form-control" @bind:event="oninput" @bind="Filter" />
         </div>
@@ -35,7 +35,7 @@
                     <td>@customer.Customer.Properties.Name</td>
                     <td>@customer.Customer.Properties.Address</td>
                     <td>@customer.Customer.Properties.Email</td>
-                    <td>@CustomerSelectedButton(customer)</td>
+                    <td>@CustomerSelectedButtonTemplate(customer)</td>
                 </tr>
                 i++;
             }
@@ -52,7 +52,7 @@
     public bool EnableSearch { get; set; }
 
     [Parameter]
-    public RenderFragment<CustomerGetDTO> CustomerSelectedButton { get; set; }
+    public RenderFragment<CustomerGetDTO> CustomerSelectedButtonTemplate { get; set; }
 
     public string? Filter { get; set; }
 

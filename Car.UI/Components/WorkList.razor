@@ -3,12 +3,24 @@
 @inject IWorkService WorkService
 @inject IWorkHourEstimationService WorkHourEstimationService
 
+@if (EnableSearch)
+{
+    <div class="form-group row mb-3">
+        <label class="col-auto col-form-label">Search: </label>
+        <div class="col">
+            <input class="form-control" @bind:event="oninput" @bind="Filter" />
+        </div>
+    </div>
+}
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
             <tr>
                 <th scope="col" width="1%">#</th>
-                <th scope="col" class="col-1">Customer Name</th>
+                @if (CustomerIncluded)
+                {
+                    <th scope="col" class="col-1">Customer Name</th>
+                }
                 <th scope="col" class="col-1">License Plate</th>
                 <th scope="col" class="col-1">Manufacturing Date</th>
                 <th scope="col" class="col-1">Category</th>
@@ -25,9 +37,14 @@
             }
             @foreach (var work in Works)
             {
+                if (!FilterMatches(work))
+                    continue;
                 <tr>
                     <td scope="row">@i</td>
-                    <td>@work.Customer.Properties.Name</td>
+                    @if (CustomerIncluded)
+                    {
+                        <td>@work.Customer.Customer.Properties.Name</td>
+                    }
                     <td>@work.Work.Properties.LicensePlate</td>
                     <td>@work.Work.Properties.ManufacturingYear</td>
                     <td>@work.Work.Properties.Category</td>
@@ -39,7 +56,8 @@
                     <td>@work.Work.Properties.Severity</td>
                     <td>@work.Work.Properties.Status</td>
                     <td>@(string.Format("{0:N2}h", WorkHourEstimationService.GetWorkHourEstimation(work.Work.Properties)))</td>
-                    <td><a href="/work/@work.Work.Id" class="btn btn-primary">Details</a></td>
+                    <td>@(WorkSelectedButtonTemplate(work))</td>
+                    @* <td><a href="/work/@work.Work.Id" class="btn btn-primary">Details</a></td> *@
                 </tr>
                 i++;
             }
@@ -50,4 +68,30 @@
 @code {
     [Parameter]
     public IList<WorkGetDTO> Works { get; set; }
+
+    [Parameter]
+    public bool EnableSearch { get; set; }
+
+    [Parameter]
+    public RenderFragment<WorkGetDTO> WorkSelectedButtonTemplate { get; set; }
+
+    [Parameter]
+    public bool CustomerIncluded { get; set; }
+
+    public string? Filter { get; set; }
+
+    private bool FilterMatches(WorkGetDTO work)
+    {
+        if (string.IsNullOrWhiteSpace(Filter))
+            return true;
+
+        string f = Filter.Trim();
+        return work.Work.Id.ToString().Contains(f, StringComparison.OrdinalIgnoreCase)
+            || work.Work.Properties.LicensePlate.Contains(f, StringComparison.OrdinalIgnoreCase)
+            || work.Work.Properties.ManufacturingYear.ToString().Contains(f, StringComparison.OrdinalIgnoreCase)
+            || work.Work.Properties.Category.ToString().Contains(f, StringComparison.OrdinalIgnoreCase)
+            || work.Work.Properties.Description.Contains(f, StringComparison.OrdinalIgnoreCase)
+            || work.Work.Properties.Severity.ToString().Contains(f, StringComparison.OrdinalIgnoreCase)
+            || work.Work.Properties.Status.ToString().Contains(f, StringComparison.OrdinalIgnoreCase);
+    }
 }

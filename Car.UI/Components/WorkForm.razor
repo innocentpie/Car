@@ -1,6 +1,7 @@
 ﻿@using Car.Shared
 @using Car.UI.Services
 @inject ICustomerService CustomerService
+@inject NavigationManager Navigation
 
 <div class="modal fade" id="customerSelectModal" tabindex="-1">
 	<div class="modal-dialog justify-content-center modal-fullscreen modal-dialog-centered">
@@ -17,9 +18,9 @@
 				else
 				{
 					<CustomerList Customers="Customers" EnableSearch="true">
-						<CustomerSelectedButton>
+						<CustomerSelectedButtonTemplate>
 							<button @onclick="@(() => CustomerSelected(context))" data-bs-dismiss="modal" class="btn btn-primary">Select</button>
-						</CustomerSelectedButton>
+						</CustomerSelectedButtonTemplate>
 					</CustomerList>
 				}
 			</div>
@@ -30,15 +31,20 @@
 	</div>
 </div>
 
-<EditForm EditContext="editContext" OnSubmit="OnSubmit">
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
 	<DataAnnotationsValidator />
 
 	<div class="form-group row mb-3">
 		<label class="col-md-2 col-form-label">Customer: <span class="text-danger" /></label>
 		<div class="col-md-10">
 			<div class="input-group">
-				<button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#customerSelectModal">Select</button>
-				<input readonly value="@SelectedCustomer?.Properties.Name" type="text" class="form-control" placeholder="None" />
+				<div class="input-group-prepend">
+					<button class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#customerSelectModal">Select</button>
+				</div>
+				<input readonly value="@(SelectedCustomer != null ? $"{SelectedCustomer.Properties.Name} ({SelectedCustomer.Properties.Email})" : "")" type="text" class="form-control" placeholder="None" />
+				<div class="input-group-append">
+					<button @onclick="@(() => NavigateToCustomer(SelectedCustomer.Id))" disabled="@(SelectedCustomer == null)" class="btn btn-outline-secondary">Details</button>
+				</div>
 			</div>
 			<ValidationMessage For="@(() => Work.CustomerId)" />
 		</div>
@@ -124,6 +130,25 @@
 		editContext = new(Work);
 		validationMessages = new(editContext);
 
+		editContext.OnFieldChanged += (s, e) =>
+		{
+			FieldIdentifier customerIdField = editContext.Field(nameof(Work.CustomerId));
+			if (e.FieldIdentifier.FieldName == customerIdField.FieldName)
+			{
+				validationMessages.Clear(customerIdField);
+				if (Work.CustomerId == Guid.Empty)
+					validationMessages.Add(customerIdField, "Customer is required.");
+			}
+		};
+
+		editContext.OnValidationRequested += (s, e) =>
+		{
+			FieldIdentifier customerIdField = editContext.Field(nameof(Work.CustomerId));
+			validationMessages.Clear(customerIdField);
+			if (Work.CustomerId == Guid.Empty)
+				validationMessages.Add(customerIdField, "Customer is required.");
+		};
+
 		workStatusInitial = Work.Status;
 		Customers = await CustomerService.GetAllCustomersAsync();
 	}
@@ -132,30 +157,12 @@
 	{
 		SelectedCustomer = customer.Customer;
 		Work.CustomerId = customer.Customer.Id;
-		RevalidateForm();
+		editContext.NotifyFieldChanged(editContext.Field(nameof(Work.CustomerId)));
 		StateHasChanged();
 	}
 
-	private async Task OnSubmit()
+	private async Task NavigateToCustomer(Guid id)
 	{
-		if (RevalidateForm())
-			await OnValidSubmit();
-	}
-
-	private bool RevalidateForm()
-	{
-		bool valid = editContext.Validate();
-		var customerIdField = editContext.Field(nameof(Work.CustomerId));
-		if (Work.CustomerId == Guid.Empty)
-		{
-			validationMessages.Clear(customerIdField);
-			validationMessages.Add(customerIdField, "Customer is required.");
-			valid = false;
-		}
-		else
-		{
-			validationMessages.Clear(customerIdField);
-		}
-		return valid;
+		Navigation.NavigateTo($"/customer/{id}");
 	}
 }

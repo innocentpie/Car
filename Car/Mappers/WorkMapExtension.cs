@@ -32,7 +32,7 @@ namespace Car.Mappers
             return new WorkGetDTO()
             {
                 Work = work.MapToWorkDTO(),
-                Customer = includeCustomer ? work.Customer.MapToCustomerDTO() : null,
+                Customer = includeCustomer ? work.Customer.MapToCustomerGetDTO() : null,
             };
         }
 

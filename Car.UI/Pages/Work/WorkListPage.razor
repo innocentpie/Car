@@ -14,7 +14,11 @@
 }
 else
 {
-    <WorkList Works="Works" />
+    <WorkList Works="Works" EnableSearch="true" CustomerIncluded="true">
+        <WorkSelectedButtonTemplate>
+            <a href="/work/@context.Work.Id" class="btn btn-primary">Details</a>
+        </WorkSelectedButtonTemplate>
+    </WorkList>
 }
 
 @code {

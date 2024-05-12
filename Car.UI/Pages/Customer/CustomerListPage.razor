@@ -15,9 +15,9 @@
 else
 {
 	<CustomerList Customers="Customers" EnableSearch="true">
-		<CustomerSelectedButton>
+		<CustomerSelectedButtonTemplate>
 			<button @onclick="@(() => NavigateToCustomer(context))" class="btn btn-primary">Details</button>
-		</CustomerSelectedButton>
+		</CustomerSelectedButtonTemplate>
 	</CustomerList>
 }
 
