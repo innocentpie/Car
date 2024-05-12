@@ -16,7 +16,8 @@ namespace Car.Shared
         public int ManufacturingYear { get; set; }
 
         [Required]
-        public WorkCategory Category { get; set; }
+		[EnumDataType(typeof(WorkCategory))]
+		public WorkCategory Category { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         [MaxLength(10000, ErrorMessage = "The Description field's maximum allowed length is 10000 characters.")]
@@ -27,6 +28,7 @@ namespace Car.Shared
         public int Severity { get; set; }
 
         [Required]
-        public WorkStatus Status { get; set; }
+		[EnumDataType(typeof(WorkStatus))]
+		public WorkStatus Status { get; set; }
     }
 }

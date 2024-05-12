@@ -72,6 +72,14 @@ namespace Car.Controllers
                 return NotFound();
             }
 
+            if (newWork.Properties.Status < existingWork.Work.Properties.Status)
+            {
+                return ValidationProblem(new ValidationProblemDetails()
+                {
+                    Errors = { { $"{nameof(WorkDTO.Properties)}.{nameof(WorkDTO.Properties.Status)}", ["New status cannot be lower than current."] } }
+                });
+            }
+
             await _workService.Update(newWork);
 
             return Ok();

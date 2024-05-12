@@ -1,6 +1,7 @@
 ﻿using Car.Controllers;
 using Car.Services;
 using Car.Shared;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -159,18 +160,48 @@ namespace Car.Tests
         }
 
         [Fact]
-        public async Task Update_IdMismatch_ReturnsBadRequest()
+        public async Task Update_StatusInvalid_ReturnsBadRequest()
         {
             Mock<IWorkService> workServiceMock = new Mock<IWorkService>();
+			workServiceMock
+	            .Setup(x => x.Get(It.IsAny<Guid>(), It.IsAny<bool>()))
+	            .ReturnsAsync(new WorkGetDTO()
+                {
+                    Work = new WorkDTO()
+                    {
+                        Properties = new WorkPropertiesDTO()
+                        {
+                            Status = WorkStatus.InProgress,
+                        }
+                    }
+                });
 
-            WorksController WorksController = new WorksController(workServiceMock.Object);
+			WorksController WorksController = new WorksController(workServiceMock.Object);
 
             var response = await WorksController.Update(Guid.Empty, new WorkDTO()
             {
-                Id = Guid.NewGuid(),
+                Properties = new WorkPropertiesDTO()
+                {
+                    Status = WorkStatus.NotStarted,
+                }
             });
 
-            Assert.IsType<BadRequestResult>(response);
+            Assert.IsType<BadRequestObjectResult>(response);
         }
-    }
+
+		[Fact]
+		public async Task Update_IdMismatch_ReturnsBadRequest()
+		{
+			Mock<IWorkService> workServiceMock = new Mock<IWorkService>();
+
+			WorksController WorksController = new WorksController(workServiceMock.Object);
+
+			var response = await WorksController.Update(Guid.Empty, new WorkDTO()
+			{
+				Id = Guid.NewGuid(),
+			});
+
+			Assert.IsType<BadRequestResult>(response);
+		}
+	}
 }

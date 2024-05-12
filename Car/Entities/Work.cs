@@ -25,7 +25,8 @@ namespace Car
         public int ManufacturingYear { get; set; }
 
         [Required]
-        public WorkCategory Category { get; set; }
+        [EnumDataType(typeof(WorkCategory))]
+		public WorkCategory Category { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         [MaxLength(10000)]
@@ -36,6 +37,7 @@ namespace Car
         public int Severity { get; set; }
 
         [Required]
+        [EnumDataType(typeof(WorkStatus))]
         public WorkStatus Status { get; set; }
     }
 }
