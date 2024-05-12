@@ -133,20 +133,18 @@
 		editContext.OnFieldChanged += (s, e) =>
 		{
 			FieldIdentifier customerIdField = editContext.Field(nameof(Work.CustomerId));
-			if (e.FieldIdentifier.FieldName == customerIdField.FieldName)
-			{
-				validationMessages.Clear(customerIdField);
-				if (Work.CustomerId == Guid.Empty)
-					validationMessages.Add(customerIdField, "Customer is required.");
-			}
+			if (e.FieldIdentifier.Equals(customerIdField))
+				CustomValidateCustomerIdField();
+
+			FieldIdentifier statusField = editContext.Field(nameof(Work.Status));
+			if(e.FieldIdentifier.Equals(statusField))
+				CustomValidateStatusField();
 		};
 
 		editContext.OnValidationRequested += (s, e) =>
 		{
-			FieldIdentifier customerIdField = editContext.Field(nameof(Work.CustomerId));
-			validationMessages.Clear(customerIdField);
-			if (Work.CustomerId == Guid.Empty)
-				validationMessages.Add(customerIdField, "Customer is required.");
+			CustomValidateCustomerIdField();
+			CustomValidateStatusField();
 		};
 
 		workStatusInitial = Work.Status;
@@ -164,5 +162,21 @@
 	private async Task NavigateToCustomer(Guid id)
 	{
 		Navigation.NavigateTo($"/customer/{id}");
+	}
+
+	private void CustomValidateCustomerIdField()
+	{
+		FieldIdentifier customerIdField = editContext.Field(nameof(Work.CustomerId));
+		validationMessages.Clear(customerIdField);
+		if (Work.CustomerId == Guid.Empty)
+			validationMessages.Add(customerIdField, "Customer is required.");
+	}
+
+	private void CustomValidateStatusField()
+	{
+		FieldIdentifier statusField = editContext.Field(nameof(Work.Status));
+		validationMessages.Clear(statusField);
+		if (Work.Status < workStatusInitial)
+			validationMessages.Add(statusField, $"Status cannot be lower than origial.");
 	}
 }
