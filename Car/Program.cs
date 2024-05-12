@@ -27,6 +27,11 @@ namespace Car
             builder.Services.AddSingleton<ICustomerService, CustomerServiceDB>();
             builder.Services.AddSingleton<IWorkService, WorkServiceDB>();
 
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
