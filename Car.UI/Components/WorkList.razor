@@ -1,6 +1,7 @@
 ﻿@using Car.Shared
 @using Car.UI.Services
 @inject IWorkService WorkService
+@inject IWorkHourEstimationService WorkHourEstimationService
 
 <div class="table-responsive">
     <table class="table table-striped">
@@ -14,6 +15,7 @@
                 <th scope="col" class="col-4">Description</th>
                 <th scope="col" class="col-1">Severity</th>
                 <th scope="col" class="col-1">Status</th>
+                <th scope="col" class="col-1">Work Hour Estimation</th>
                 <th scope="col" width="1%"></th>
             </tr>
         </thead>
@@ -36,6 +38,7 @@
                     </td>
                     <td>@work.Work.Properties.Severity</td>
                     <td>@work.Work.Properties.Status</td>
+                    <td>@(string.Format("{0:N2}h", WorkHourEstimationService.GetWorkHourEstimation(work.Work.Properties)))</td>
                     <td><a href="/work/@work.Work.Id" class="btn btn-primary">Details</a></td>
                 </tr>
                 i++;
