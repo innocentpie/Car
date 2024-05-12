@@ -122,17 +122,14 @@ namespace Car.Tests
             Mock<IWorkService> workServiceMock = new Mock<IWorkService>();
             workServiceMock
                 .Setup(x => x.Get(It.IsAny<Guid>(), It.IsAny<bool>()))
-                .ReturnsAsync(new WorkGetDTO());
+                .ReturnsAsync(new WorkGetDTO() { Work = new WorkDTO() { Properties = new WorkPropertiesDTO() { } } });
             workServiceMock
                 .Setup(x => x.Update(It.IsAny<WorkDTO>()))
                 .Verifiable();
 
             WorksController WorksController = new WorksController(workServiceMock.Object);
 
-            var response = await WorksController.Update(Guid.Empty, new WorkDTO()
-            {
-                Id = Guid.Empty,
-            });
+            var response = await WorksController.Update(Guid.Empty, new WorkDTO() { Properties = new WorkPropertiesDTO() { } });
 
             workServiceMock.VerifyAll();
 
