@@ -55,8 +55,19 @@ namespace Car.Services.Implementation.DB
         public async Task Update(CustomerDTO newCustomer)
         {
             Customer? customer = await _context.Customers.FindAsync(newCustomer.Id);
+            if(customer == null)
+            {
+                throw new CustomerNotFoundException();
+            }
             newCustomer.MapIntoCustomer(customer);
             await _context.SaveChangesAsync();
         }
+    }
+
+    public class CustomerNotFoundException : Exception
+    {
+        public CustomerNotFoundException() : base() { }
+
+        public CustomerNotFoundException(string message) : base(message) { }
     }
 }

@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Car.UI", "Car.UI\Car.UI.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Car.Shared", "Car.Shared\Car.Shared.csproj", "{264523DB-363C-458B-A91D-89596600C6E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Car.Tests", "Car.Tests\Car.Tests.csproj", "{21F81D63-973B-476C-BD1F-586E0F9483D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Car.UI.Tests", "Car.UI.Tests\Car.UI.Tests.csproj", "{D0504275-1244-4D75-BF2B-A1538BCDE881}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{264523DB-363C-458B-A91D-89596600C6E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{264523DB-363C-458B-A91D-89596600C6E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{264523DB-363C-458B-A91D-89596600C6E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21F81D63-973B-476C-BD1F-586E0F9483D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21F81D63-973B-476C-BD1F-586E0F9483D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21F81D63-973B-476C-BD1F-586E0F9483D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21F81D63-973B-476C-BD1F-586E0F9483D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0504275-1244-4D75-BF2B-A1538BCDE881}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0504275-1244-4D75-BF2B-A1538BCDE881}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0504275-1244-4D75-BF2B-A1538BCDE881}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0504275-1244-4D75-BF2B-A1538BCDE881}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
