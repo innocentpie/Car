@@ -13,6 +13,7 @@ namespace Car.Shared
 
         [Required]
         [Range(1900, int.MaxValue, ErrorMessage = "The Manufacturing Year field's minimum value is 1900.")]
+        [YearLessThanNow("The Manufacturing Year field cannot be higher than today's year.")]
         public int ManufacturingYear { get; set; }
 
         [Required]

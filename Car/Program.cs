@@ -2,6 +2,7 @@ using Car.Data;
 using Car.Services;
 using Car.Services.Implementation.DB;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Car
 {
@@ -26,8 +27,14 @@ namespace Car
 
             builder.Services.AddSingleton<ICustomerService, CustomerServiceDB>();
             builder.Services.AddSingleton<IWorkService, WorkServiceDB>();
+			builder.Services.AddSerilog(
+	            config =>
+		            config
+			            .MinimumLevel.Information()
+			            .WriteTo.Console()
+			            .WriteTo.File("log.txt"));
 
-            builder.Services.AddControllers().AddJsonOptions(options =>
+			builder.Services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
             });

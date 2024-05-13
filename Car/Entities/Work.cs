@@ -22,6 +22,7 @@ namespace Car
 
         [Required]
         [Range(1900, int.MaxValue)]
+        [YearLessThanNow]
         public int ManufacturingYear { get; set; }
 
         [Required]

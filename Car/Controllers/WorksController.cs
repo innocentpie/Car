@@ -2,6 +2,7 @@
 using Car.Services;
 using Car.Shared;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Car.Controllers
 {
@@ -74,11 +75,9 @@ namespace Car.Controllers
 
             if (newWork.Properties.Status < existingWork.Work.Properties.Status)
             {
-                return ValidationProblem(new ValidationProblemDetails()
-                {
-                    Errors = { { $"{nameof(WorkDTO.Properties)}.{nameof(WorkDTO.Properties.Status)}", ["New status cannot be lower than current."] } }
-                });
-            }
+                ModelState.AddModelError<WorkDTO>((x) => x.Properties.Status, "New status cannot be lower than current.");
+                return ValidationProblem(ModelState);
+			}
 
             await _workService.Update(newWork);
 
