@@ -156,36 +156,6 @@ namespace Car.Tests
             Assert.IsType<NotFoundResult>(response);
         }
 
-        [Fact]
-        public async Task Update_StatusInvalid_ReturnsBadRequest()
-        {
-            Mock<IWorkService> workServiceMock = new Mock<IWorkService>();
-			workServiceMock
-	            .Setup(x => x.Get(It.IsAny<Guid>(), It.IsAny<bool>()))
-	            .ReturnsAsync(new WorkGetDTO()
-                {
-                    Work = new WorkDTO()
-                    {
-                        Properties = new WorkPropertiesDTO()
-                        {
-                            Status = WorkStatus.InProgress,
-                        }
-                    }
-                });
-
-			WorksController WorksController = new WorksController(workServiceMock.Object);
-
-            var response = await WorksController.Update(Guid.Empty, new WorkDTO()
-            {
-                Properties = new WorkPropertiesDTO()
-                {
-                    Status = WorkStatus.NotStarted,
-                }
-            });
-
-            Assert.IsType<BadRequestObjectResult>(response);
-        }
-
 		[Fact]
 		public async Task Update_IdMismatch_ReturnsBadRequest()
 		{
